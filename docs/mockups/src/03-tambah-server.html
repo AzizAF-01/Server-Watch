@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><link rel="stylesheet" href="style.css">
+<style>
+  .bgframe { position: fixed; inset: 0; width: 1440px; height: 900px; border: 0; }
+  .scrim { position: fixed; inset: 0; background: rgba(8,9,11,.72); }
+  .modal {
+    position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: 640px; background: var(--panel); border: 1px solid #3a4048; border-radius: 9px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.5);
+  }
+  .m-h { display: flex; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--line); }
+  .m-h h2 { font-size: 15px; font-weight: 600; }
+  .m-b { padding: 18px 20px; display: grid; gap: 14px; }
+  .row2 { display: grid; grid-template-columns: 1fr 110px; gap: 12px; }
+  .row3 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 5px; }
+  .in {
+    height: 32px; border: 1px solid var(--line); background: var(--bg); border-radius: 5px;
+    display: flex; align-items: center; padding: 0 10px; gap: 8px; font-size: 13px;
+  }
+  .in.ph { color: var(--dim); }
+  .in.focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(56,163,165,.18); }
+  .in .end { margin-left: auto; color: var(--dim); font-size: 12px; }
+  .seg { display: flex; border: 1px solid var(--line); border-radius: 5px; overflow: hidden; width: max-content; }
+  .seg span { padding: 6px 14px; font-size: 12.5px; color: var(--muted); border-right: 1px solid var(--line); }
+  .seg span:last-child { border-right: 0; }
+  .seg span.on { background: var(--panel-2); color: var(--text); }
+  .note { font-size: 11.5px; color: var(--dim); margin-top: 5px; }
+  .hk { border: 1px solid rgba(224,164,58,.45); background: rgba(224,164,58,.06); border-radius: 6px; padding: 12px 14px; }
+  .hk h4 { font-size: 13px; font-weight: 600; color: #ecc070; margin-bottom: 4px; }
+  .hk .fp { font-family: var(--mono); font-size: 12px; background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 6px 8px; margin: 8px 0; }
+  .detect { display: flex; gap: 18px; font-size: 12px; color: var(--muted); }
+  .detect b { color: var(--text); font-weight: 500; }
+  .m-f { display: flex; align-items: center; gap: 10px; padding: 14px 20px; border-top: 1px solid var(--line); }
+</style></head>
+<body>
+<iframe class="bgframe" src="01-dashboard.html"></iframe>
+<div class="scrim"></div>
+<div class="modal">
+  <div class="m-h"><h2>Tambah server</h2><span style="flex:1"></span><button class="btn ghost">Import dari ~/.ssh/config</button><span class="muted" style="margin-left:12px">&#x2715;</span></div>
+  <div class="m-b">
+    <div class="row3">
+      <div><label>Nama tampilan</label><div class="in">db-prod-02</div></div>
+      <div><label>Tag</label><div class="in"><span class="tag">production</span><span class="dim">Tambah tag</span></div></div>
+    </div>
+    <div class="row2">
+      <div><label>Host atau IP</label><div class="in">10.0.1.22</div></div>
+      <div><label>Port</label><div class="in num">22</div></div>
+    </div>
+    <div class="row3">
+      <div><label>Username</label><div class="in">monitor</div><div class="note">Disarankan user khusus tanpa sudo</div></div>
+      <div><label>Jump host</label><div class="in">bastion-01<span class="end">&#x25BE;</span></div></div>
+    </div>
+    <div>
+      <label>Autentikasi</label>
+      <div class="seg"><span class="on">Private key</span><span>Password</span><span>SSH agent</span></div>
+    </div>
+    <div class="row3">
+      <div><label>File private key</label><div class="in num" style="font-size:12px">C:\Users\admin\.ssh\id_ed25519<span class="end">Pilih</span></div><div class="note">Hanya path yang disimpan, file key tidak disalin</div></div>
+      <div><label>Passphrase</label><div class="in focus">&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;</div><div class="note">Disimpan di Windows Credential Manager</div></div>
+    </div>
+
+    <div class="hk">
+      <h4>Konfirmasi host key (koneksi pertama ke server ini)</h4>
+      <div class="muted" style="font-size:12.5px">Cocokkan fingerprint di bawah dengan output <span class="num">ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub</span> di server sebelum menyimpan.</div>
+      <div class="fp">ED25519 &nbsp;SHA256:[fingerprint server tampil di sini]</div>
+      <div class="detect"><span>Terdeteksi: <b>Ubuntu 22.04</b></span><span>Shell <b>/bin/sh</b></span><span>systemd <b>ada</b></span><span>Waktu login <b class="num">184 ms</b></span></div>
+    </div>
+  </div>
+  <div class="m-f">
+    <span class="st ok">Tes koneksi berhasil</span>
+    <span style="flex:1"></span>
+    <button class="btn ghost">Batal</button>
+    <button class="btn">Tes ulang</button>
+    <button class="btn primary">Percayai host key &amp; simpan</button>
+  </div>
+</div>
+</body></html>

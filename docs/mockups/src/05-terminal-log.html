@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><link rel="stylesheet" href="style.css">
+<style>
+  .tabs { display: flex; align-items: stretch; height: 38px; background: #101214; border-bottom: 1px solid var(--line); padding-left: 8px; }
+  .tabs span { display: flex; align-items: center; gap: 8px; padding: 0 14px; color: var(--muted); border-right: 1px solid var(--line); font-size: 12.5px; }
+  .tabs span.on { background: var(--bg); color: var(--text); }
+  .tabs span .x { color: var(--dim); margin-left: 6px; }
+  .split { display: grid; grid-template-columns: 1fr 1fr; height: calc(100% - 38px); }
+  .term { background: #0e1012; padding: 14px 16px; font-family: var(--mono); font-size: 12.5px; line-height: 1.6; color: #cfd3d8; border-right: 1px solid var(--line); overflow: hidden; }
+  .term .p { color: #7fd3a6; } .term .path { color: #8fb8c9; } .term .c { color: var(--dim); }
+  .term .cursor { display: inline-block; width: 8px; height: 15px; background: #cfd3d8; vertical-align: -3px; }
+  .logp { display: flex; flex-direction: column; min-width: 0; }
+  .logbar { display: flex; gap: 8px; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+  .logbar .in { height: 28px; border: 1px solid var(--line); background: var(--bg); border-radius: 5px; display: flex; align-items: center; padding: 0 10px; font-size: 12.5px; }
+  .logs { flex: 1; padding: 8px 0; font-family: var(--mono); font-size: 12px; line-height: 1.7; overflow: hidden; }
+  .logs div { padding: 0 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .logs .t { color: var(--dim); margin-right: 10px; }
+  .logs .e { background: rgba(229,83,75,.08); color: #f3a39e; }
+  .logs .w { color: #ecc070; }
+  .logs mark { background: rgba(56,163,165,.3); color: inherit; padding: 0 1px; }
+  .logs .sus { background: rgba(224,164,58,.08); }
+  .logs div.callout { margin: 10px 14px; padding: 9px 12px; border: 1px dashed #4a515a; border-radius: 6px; color: var(--muted); font-family: "Segoe UI", system-ui, sans-serif; font-size: 12px; white-space: normal; overflow: visible; }
+  .statusline { display: flex; gap: 16px; padding: 6px 14px; border-top: 1px solid var(--line); font-size: 11.5px; color: var(--dim); }
+</style></head>
+<body>
+<div id="titlebar"></div>
+<div class="app">
+  <div id="side"></div>
+  <main class="main">
+    <div class="tabs">
+      <span class="on"><span class="st crit"></span>db-prod-01<span class="x">&#x2715;</span></span>
+      <span><span class="st warn"></span>web-prod-02<span class="x">&#x2715;</span></span>
+      <span class="dim">+ Buka terminal</span>
+    </div>
+    <div class="split">
+<div class="term"><div class="c">Terhubung ke deploy@10.0.1.21 lewat bastion-01. Sesi memakai koneksi yang sama dengan monitoring.</div>
+<div><span class="p">deploy@db-prod-01</span>:<span class="path">~</span>$ sudo du -xh /var --max-depth=1 | sort -rh | head -5</div>
+<div>188G&nbsp;&nbsp;&nbsp;&nbsp;/var</div>
+<div>141G&nbsp;&nbsp;&nbsp;&nbsp;/var/lib</div>
+<div>&nbsp;44G&nbsp;&nbsp;&nbsp;&nbsp;/var/log</div>
+<div>&nbsp;2.1G&nbsp;&nbsp;&nbsp;/var/cache</div>
+<div>&nbsp;512M&nbsp;&nbsp;&nbsp;/var/backups</div>
+<div><span class="p">deploy@db-prod-01</span>:<span class="path">~</span>$ sudo du -sh /var/log/postgresql/*.log | sort -rh | head -3</div>
+<div>&nbsp;31G&nbsp;&nbsp;&nbsp;&nbsp;/var/log/postgresql/postgresql-14-main.log</div>
+<div>&nbsp;6.2G&nbsp;&nbsp;&nbsp;/var/log/postgresql/postgresql-14-main.log.1</div>
+<div>&nbsp;1.8G&nbsp;&nbsp;&nbsp;/var/log/postgresql/postgresql-14-main.log.2.gz</div>
+<div><span class="p">deploy@db-prod-01</span>:<span class="path">~</span>$ cat /etc/logrotate.d/postgresql-common | grep -E "rotate|size"</div>
+<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rotate 10</div>
+<div><span class="p">deploy@db-prod-01</span>:<span class="path">~</span>$ <span class="cursor"></span></div>
+</div>
+      <div class="logp">
+        <div class="logbar">
+          <span class="in">journalctl -u postgresql<span class="dim" style="margin-left:10px">&#x25BE;</span></span>
+          <span class="in dim" style="flex:1">Cari kata kunci di log</span>
+          <span class="chip on" style="height:28px">Ikuti</span>
+        </div>
+        <div class="logs">
+          <div><span class="t">14:09:51</span>LOG:  checkpoint starting: time</div>
+          <div class="e"><span class="t">14:09:58</span>ERROR:  duplicate key value violates unique constraint "orders_pkey"</div>
+          <div><span class="t">14:10:02</span>LOG:  checkpoint complete: wrote 4122 buffers (3.1%)</div>
+          <div class="w"><span class="t">14:10:14</span>WARNING:  could not write temporary file: No space left on device</div>
+          <div class="e"><span class="t">14:10:14</span>ERROR:  could not extend file "base/16384/2619": No space left on device</div>
+          <div><span class="t">14:10:21</span>LOG:  automatic vacuum of table "app.public.events"</div>
+          <div class="sus"><span class="t">14:10:33</span>FATAL:  password authentication failed for user "&lt;img src=x onerror=alert(1)&gt;"</div>
+          <div class="callout">Baris di atas berisi teks HTML dari log server. Aplikasi menampilkannya sebagai teks biasa dan tidak menjalankannya (SEC-01).</div>
+          <div><span class="t">14:10:40</span>LOG:  connection received: host=10.0.1.31 port=51544</div>
+          <div class="e"><span class="t">14:10:41</span>ERROR:  could not extend file "base/16384/2619": No space left on device</div>
+          <div><span class="t">14:10:52</span>LOG:  checkpoint starting: time</div>
+        </div>
+        <div class="statusline"><span>Mengikuti log secara langsung</span><span>Maks. 1 MB per tarikan</span><span style="margin-left:auto">11 baris</span></div>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="layout.js"></script><script>renderShell("term")</script>
+</body></html>

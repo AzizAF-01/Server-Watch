@@ -1,0 +1,132 @@
+/* Palet: netral grafit (alat ops, dipakai lama di layar) + warna status fungsional + satu aksen teal untuk aksi utama. */
+:root {
+  --bg: #15171a;
+  --panel: #1c1f23;
+  --panel-2: #23272c;
+  --line: #2e333a;
+  --text: #e6e8eb;
+  --muted: #9aa1ab;
+  --dim: #6b727c;
+  --ok: #3fb67a;
+  --warn: #e0a43a;
+  --crit: #e5534b;
+  --off: #7d8590;
+  --accent: #38a3a5;
+  --accent-ink: #0d2526;
+  --mono: "Cascadia Mono", "Consolas", monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1440px; height: 900px; overflow: hidden; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 13px/1.45 "Segoe UI", system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+.num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+/* Title bar (frameless window Wails) */
+.titlebar {
+  height: 34px; flex: none;
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 0 0 14px;
+  background: #101214; border-bottom: 1px solid var(--line);
+  font-size: 12px; color: var(--muted);
+}
+.titlebar b { color: var(--text); font-weight: 600; }
+.titlebar .mock { margin-left: 8px; padding: 1px 7px; border: 1px dashed var(--dim); border-radius: 3px; color: var(--dim); font-size: 11px; }
+.titlebar .spacer { flex: 1; }
+.winbtn { width: 46px; height: 34px; display: grid; place-items: center; color: var(--muted); }
+
+.app { flex: 1; display: flex; min-height: 0; }
+
+/* Sidebar */
+.side {
+  width: 210px; flex: none;
+  background: var(--panel); border-right: 1px solid var(--line);
+  display: flex; flex-direction: column; padding: 14px 10px;
+}
+.brand { display: flex; align-items: center; gap: 9px; padding: 2px 8px 16px; font-weight: 600; font-size: 14px; }
+.brand-mark { width: 22px; height: 22px; border-radius: 5px; background: var(--accent); display: grid; place-items: center; color: var(--accent-ink); }
+.nav a {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 10px; border-radius: 5px;
+  color: var(--muted); text-decoration: none; margin-bottom: 2px;
+}
+.nav a.active { background: var(--panel-2); color: var(--text); }
+.nav a .count { margin-left: auto; font-size: 11px; padding: 0 6px; border-radius: 8px; background: rgba(229,83,75,.18); color: #f08a84; }
+.nav svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.6; }
+.side-sec { margin: 18px 10px 6px; font-size: 11px; color: var(--dim); }
+.tagnav a { padding: 5px 10px; font-size: 12.5px; }
+.tagnav a i { width: 8px; height: 8px; border-radius: 2px; background: var(--dim); display: inline-block; }
+.side-foot { margin-top: auto; padding: 10px; font-size: 11.5px; color: var(--dim); border-top: 1px solid var(--line); }
+.side-foot .row { display: flex; justify-content: space-between; margin-top: 3px; }
+
+/* Main */
+.main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.topbar {
+  height: 56px; flex: none;
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 24px; border-bottom: 1px solid var(--line);
+}
+.topbar h1 { font-size: 17px; font-weight: 600; }
+.topbar .sub { color: var(--muted); }
+.topbar .spacer { flex: 1; }
+.content { flex: 1; min-height: 0; padding: 20px 24px; overflow: hidden; }
+
+.btn {
+  height: 30px; padding: 0 12px; border-radius: 5px;
+  display: inline-flex; align-items: center; gap: 7px;
+  border: 1px solid var(--line); background: var(--panel-2); color: var(--text);
+  font: inherit; font-size: 12.5px;
+}
+.btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.7; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.btn.ghost { background: transparent; }
+.btn.danger { color: #f08a84; }
+
+.search {
+  width: 260px; height: 30px; border-radius: 5px;
+  border: 1px solid var(--line); background: var(--bg);
+  display: flex; align-items: center; gap: 8px; padding: 0 10px; color: var(--dim);
+}
+.search svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.7; }
+.kbd { margin-left: auto; font-size: 10.5px; border: 1px solid var(--line); border-radius: 3px; padding: 0 4px; }
+
+/* Status */
+.st { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; }
+.st::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.st.ok { color: var(--ok); } .st.warn { color: var(--warn); } .st.crit { color: var(--crit); } .st.off { color: var(--off); }
+
+.chip {
+  height: 28px; padding: 0 11px; border-radius: 5px;
+  display: inline-flex; align-items: center; gap: 7px;
+  border: 1px solid var(--line); color: var(--muted); font-size: 12.5px;
+}
+.chip.on { background: var(--panel-2); color: var(--text); border-color: #444b54; }
+.chip .n { font-family: var(--mono); color: var(--text); }
+
+.tag { font-size: 11px; padding: 1px 6px; border-radius: 3px; background: var(--panel-2); color: var(--muted); border: 1px solid var(--line); }
+
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 7px; }
+.panel-h { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+.panel-h h2 { font-size: 13.5px; font-weight: 600; }
+.panel-h .hint { color: var(--dim); font-size: 12px; }
+.panel-h .spacer { flex: 1; }
+
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; font-weight: 500; color: var(--dim); font-size: 12px; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+td { padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+tr:last-child td { border-bottom: 0; }
+td.r, th.r { text-align: right; }
+
+.bar { width: 70px; height: 5px; border-radius: 3px; background: var(--panel-2); overflow: hidden; display: inline-block; vertical-align: middle; margin-right: 8px; }
+.bar i { display: block; height: 100%; background: #6f7883; }
+.bar.warn i { background: var(--warn); } .bar.crit i { background: var(--crit); }
+.metric { display: inline-flex; align-items: center; }
+.metric .v { width: 38px; text-align: right; font-family: var(--mono); font-size: 12.5px; }
+.metric .v.warn { color: var(--warn); } .metric .v.crit { color: var(--crit); }
+
+svg.spark { width: 90px; height: 22px; display: block; }
+.muted { color: var(--muted); } .dim { color: var(--dim); }

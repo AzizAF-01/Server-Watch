@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><link rel="stylesheet" href="style.css">
+<style>
+  .tabs { display: flex; gap: 2px; padding: 0 24px; border-bottom: 1px solid var(--line); }
+  .tabs span { padding: 11px 14px; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .tabs span.on { color: var(--text); border-color: var(--accent); }
+  .tabs .n { font-family: var(--mono); font-size: 11px; color: var(--dim); margin-left: 4px; }
+  .grid { display: grid; grid-template-columns: 1fr 360px; gap: 16px; }
+  .rule { font-family: var(--mono); font-size: 12.5px; }
+  .rule .op { color: var(--muted); }
+  .toggle { width: 30px; height: 17px; border-radius: 9px; background: var(--panel-2); border: 1px solid var(--line); position: relative; display: inline-block; vertical-align: middle; }
+  .toggle::after { content: ""; position: absolute; top: 2px; left: 2px; width: 11px; height: 11px; border-radius: 50%; background: var(--dim); }
+  .toggle.on { background: rgba(56,163,165,.35); border-color: var(--accent); }
+  .toggle.on::after { left: 15px; background: #bfe6e6; }
+  .ch { display: flex; align-items: center; gap: 10px; padding: 11px 16px; border-bottom: 1px solid var(--line); }
+  .ch:last-child { border-bottom: 0; }
+  .ch .d { color: var(--dim); font-size: 12px; }
+  .ev td { font-size: 12.5px; }
+  .lvl { font-size: 11px; padding: 1px 6px; border-radius: 3px; }
+  .lvl.crit { background: rgba(229,83,75,.16); color: #f08a84; }
+  .lvl.warn { background: rgba(224,164,58,.16); color: #ecc070; }
+  .lvl.ok { background: rgba(63,182,122,.14); color: #7fd3a6; }
+</style></head>
+<body>
+<div id="titlebar"></div>
+<div class="app">
+  <div id="side"></div>
+  <main class="main">
+    <div class="topbar">
+      <h1>Alert</h1><span class="sub">3 alert aktif</span>
+      <span class="spacer"></span>
+      <button class="btn primary"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Buat rule</button>
+    </div>
+    <div class="tabs"><span class="on">Rule<span class="n">7</span></span><span>Riwayat<span class="n">142</span></span><span>Channel notifikasi<span class="n">3</span></span></div>
+    <div class="content">
+      <div class="grid">
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div class="panel">
+            <table>
+              <thead><tr><th style="width:44px"></th><th>Kondisi</th><th>Berlaku untuk</th><th>Tingkat</th><th>Kirim ke</th><th class="r">Status sekarang</th></tr></thead>
+              <tbody>
+                <tr><td><span class="toggle on"></span></td><td class="rule">disk.used <span class="op">&gt;</span> 90% <span class="op">selama</span> 5m</td><td>Semua server</td><td><span class="lvl crit">Critical</span></td><td class="muted">Telegram, Desktop</td><td class="r"><span class="st crit">1 terpicu</span></td></tr>
+                <tr><td><span class="toggle on"></span></td><td class="rule">cpu.total <span class="op">&gt;</span> 90% <span class="op">selama</span> 5m</td><td><span class="tag">production</span></td><td><span class="lvl warn">Warning</span></td><td class="muted">Telegram, Desktop</td><td class="r"><span class="st warn">1 terpicu</span></td></tr>
+                <tr><td><span class="toggle on"></span></td><td class="rule">ssh.unreachable <span class="op">selama</span> 3m</td><td>Semua server</td><td><span class="lvl crit">Critical</span></td><td class="muted">Telegram, Email, Desktop</td><td class="r"><span class="st crit">1 terpicu</span></td></tr>
+                <tr><td><span class="toggle on"></span></td><td class="rule">mem.used <span class="op">&gt;</span> 90% <span class="op">selama</span> 10m</td><td>Semua server</td><td><span class="lvl warn">Warning</span></td><td class="muted">Desktop</td><td class="r"><span class="st ok">Normal</span></td></tr>
+                <tr><td><span class="toggle on"></span></td><td class="rule">service <span class="op">!=</span> active <span class="op">selama</span> 1m</td><td><span class="tag">production</span></td><td><span class="lvl crit">Critical</span></td><td class="muted">Telegram, Desktop</td><td class="r"><span class="st ok">Normal</span></td></tr>
+                <tr><td><span class="toggle on"></span></td><td class="rule">ssl.expires_in <span class="op">&lt;</span> 14d</td><td>Uptime check</td><td><span class="lvl warn">Warning</span></td><td class="muted">Email</td><td class="r"><span class="st ok">Normal</span></td></tr>
+                <tr><td><span class="toggle"></span></td><td class="rule">load.1m <span class="op">&gt;</span> 2&#215;core <span class="op">selama</span> 5m</td><td><span class="tag">staging</span></td><td><span class="lvl warn">Warning</span></td><td class="muted">Desktop</td><td class="r dim">Nonaktif</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="panel">
+            <div class="panel-h"><h2>Kejadian terbaru</h2><span class="spacer"></span><span class="dim" style="font-size:12px">Lihat semua riwayat</span></div>
+            <table class="ev">
+              <thead><tr><th>Waktu</th><th>Server</th><th>Kejadian</th><th>Tingkat</th><th class="r">Durasi</th></tr></thead>
+              <tbody>
+                <tr><td class="num muted">14:07</td><td>web-prod-02</td><td>CPU 97% selama 5 menit</td><td><span class="lvl warn">Warning</span></td><td class="r num">berjalan</td></tr>
+                <tr><td class="num muted">14:02</td><td>db-prod-01</td><td>Disk /var 94%</td><td><span class="lvl crit">Critical</span></td><td class="r num">berjalan</td></tr>
+                <tr><td class="num muted">13:52</td><td>backup-01</td><td>SSH gagal: autentikasi ditolak</td><td><span class="lvl crit">Critical</span></td><td class="r num">berjalan</td></tr>
+                <tr><td class="num muted">11:20</td><td>api-prod-01</td><td>Service pgbouncer pulih</td><td><span class="lvl ok">Resolved</span></td><td class="r num">4 mnt 10 dtk</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div class="panel">
+            <div class="panel-h"><h2>Channel notifikasi</h2></div>
+            <div class="ch"><span class="toggle on"></span><div><div>Notifikasi desktop</div><div class="d">Windows, dengan suara untuk critical</div></div></div>
+            <div class="ch"><span class="toggle on"></span><div><div>Telegram</div><div class="d">Bot token tersimpan di keychain</div></div><button class="btn ghost" style="margin-left:auto;height:26px">Kirim tes</button></div>
+            <div class="ch"><span class="toggle on"></span><div><div>Email (SMTP)</div><div class="d">Hanya critical</div></div><button class="btn ghost" style="margin-left:auto;height:26px">Kirim tes</button></div>
+            <div class="ch"><span class="toggle"></span><div><div>Webhook</div><div class="d">Discord, Slack, atau URL lain</div></div><button class="btn ghost" style="margin-left:auto;height:26px">Atur</button></div>
+          </div>
+          <div class="panel" style="padding:14px 16px">
+            <h2 style="font-size:13.5px;font-weight:600;margin-bottom:6px">Snooze aktif</h2>
+            <div class="muted" style="font-size:12.5px">Belum ada. Snooze bisa diatur dari kartu server di halaman Server atau dari notifikasi.</div>
+          </div>
+          <div class="panel" style="padding:14px 16px;border-color:rgba(224,164,58,.35)">
+            <h2 style="font-size:13.5px;font-weight:600;margin-bottom:6px">Alert hanya berjalan saat aplikasi menyala</h2>
+            <div class="muted" style="font-size:12.5px">Jika laptop tidur atau aplikasi ditutup dari tray, alert tidak terkirim. Mode headless untuk pemantauan 24 jam direncanakan di v1.0.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="layout.js"></script><script>renderShell("alert")</script>
+</body></html>

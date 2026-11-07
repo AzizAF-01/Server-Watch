@@ -1,0 +1,38 @@
+# Build output
+build/bin/
+build/windows/installer/tmp/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.zip
+
+# Frontend
+frontend/dist/
+frontend/node_modules/
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Databases & local state
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+*.log
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.suo
+*.sw?
+
+# Sensitive & environment
+.env
+.env.*
+*.pem
+*.key
