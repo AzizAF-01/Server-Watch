@@ -61,11 +61,13 @@ jobs:
           wails version
           makensis /VERSION
 
-      - name: Install Frontend Dependencies
+      - name: Build Frontend Assets
         shell: pwsh
         run: |
           cd frontend
           npm ci
+          npm run build
+          cd ..
 
       - name: Run Go Test Suite
         shell: pwsh
