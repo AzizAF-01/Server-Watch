@@ -36,3 +36,7 @@ Thumbs.db
 .env.*
 *.pem
 *.key
+
+# Local & private notes (never committed to git)
+.local-notes/
+*.local.md
