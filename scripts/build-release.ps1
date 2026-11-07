@@ -1,10 +1,34 @@
 # Skrip Build & Packaging Rilis Produksi ServerWatch (Windows AMD64)
+param(
+    [string]$Version = ""
+)
+
 $ErrorActionPreference = "Stop"
 
+# Deteksi direktori root proyek
+$rootDir = Resolve-Path (Join-Path $PSScriptRoot "..")
+Set-Location $rootDir
+
+# Baca versi dari wails.json jika tidak diberikan parameter
+if (-not $Version) {
+    if (Test-Path "wails.json") {
+        $wJson = Get-Content "wails.json" -Raw | ConvertFrom-Json
+        $Version = $wJson.info.productVersion
+    }
+}
+if (-not $Version) { $Version = "1.0.0" }
+$tag = if ($Version.StartsWith("v")) { $Version } else { "v$Version" }
+$cleanVersion = $tag.TrimStart("v")
+
+# Deteksi instalasi NSIS lokal jika ada
 $nsisPath = "$env:LOCALAPPDATA\Programs\nsis-3.10"
 if ((Test-Path $nsisPath) -and ($env:PATH -notlike "*$nsisPath*")) {
     $env:PATH = "$env:PATH;$nsisPath"
 }
+
+Write-Host "==========================================================" -ForegroundColor Cyan
+Write-Host "  Membangun ServerWatch Rilis $tag (Windows AMD64)" -ForegroundColor Cyan
+Write-Host "==========================================================" -ForegroundColor Cyan
 
 Write-Host "[1/4] Memaketkan frontend Svelte + Vite..." -ForegroundColor Cyan
 npm --prefix frontend run build
@@ -12,10 +36,18 @@ npm --prefix frontend run build
 Write-Host "[2/4] Mengompilasi biner produksi & NSIS Windows Installer..." -ForegroundColor Cyan
 wails build -s -nsis -ldflags "-s -w"
 
-$binDir = Join-Path $PSScriptRoot "..\build\bin"
+$binDir = Join-Path $rootDir "build\bin"
 $exeFile = Join-Path $binDir "ServerWatch.exe"
-$setupFile = Join-Path $binDir "ServerWatch-v1.0.0-amd64-Setup.exe"
-$portableZip = Join-Path $binDir "ServerWatch-v1.0.0-windows-amd64-Portable.zip"
+
+# Cari file installer Setup.exe hasil build Wails
+$setupFileItem = Get-ChildItem -Path $binDir -Filter "*Setup.exe" | Select-Object -First 1
+if ($setupFileItem) {
+    $setupFile = $setupFileItem.FullName
+} else {
+    $setupFile = Join-Path $binDir "ServerWatch-$tag-amd64-Setup.exe"
+}
+
+$portableZip = Join-Path $binDir "ServerWatch-$tag-windows-amd64-Portable.zip"
 $readmeFile = Join-Path $binDir "CARA_PAKAI.txt"
 $checksumFile = Join-Path $binDir "SHA256SUMS.txt"
 
@@ -26,12 +58,12 @@ Remove-Item -Path (Join-Path $binDir "wails_init_serverwatch.exe") -ErrorAction 
 Write-Host "[3/4] Membuat paket Portable (.zip)..." -ForegroundColor Cyan
 @"
 ======================================================================
-ServerWatch v1.0.0 - Multi-Server SSH, Database & DevOps Monitoring
+ServerWatch $tag - Multi-Server SSH, Database & DevOps Monitoring
 ======================================================================
 
 OPSI PENGGUNAAN:
 1. Menggunakan Installer (Disarankan):
-   Jalankan 'ServerWatch-v1.0.0-amd64-Setup.exe' untuk menginstal
+   Jalankan '$(Split-Path $setupFile -Leaf)' untuk menginstal
    ServerWatch ke sistem beserta shortcut Desktop & Start Menu.
 
 2. Menggunakan Versi Portable:
@@ -67,5 +99,5 @@ foreach ($f in @($setupFile, $portableZip, $exeFile)) {
 }
 $hashes | Set-Content -Path $checksumFile -Encoding UTF8
 
-Write-Host "`nBuild Rilis Selesai! Artefak tersedia di build\bin:" -ForegroundColor Green
+Write-Host "`nBuild Rilis $tag Selesai! Artefak tersedia di build\bin:" -ForegroundColor Green
 Get-ChildItem -Path $binDir -File | Select-Object Name, @{Name="Ukuran (MB)";Expression={[math]::Round($_.Length / 1MB, 2)}}, LastWriteTime | Format-Table -AutoSize
