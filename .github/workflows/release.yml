@@ -11,13 +11,19 @@ on:
         required: false
         default: ''
 
-permissions:
-  contents: write
+# Cabut semua izin default secara global (Principle of Least Privilege)
+permissions: {}
 
 jobs:
-  build-and-release:
-    name: Build & Release Windows (AMD64)
+  build:
+    name: Build & Verify (Windows AMD64)
     runs-on: windows-latest
+    outputs:
+      release_version: ${{ steps.version-step.outputs.version }}
+    permissions:
+      contents: read
+      id-token: write        # Diperlukan untuk cryptographic provenance / artifact attestation
+      attestations: write    # Diperlukan untuk mencatat tanda tangan integritas biner
 
     steps:
       - name: Checkout Repository
@@ -74,12 +80,19 @@ jobs:
         run: |
           go test ./...
 
-      - name: Build Application & NSIS Installer
+      - name: Determine Version
+        id: version-step
         shell: pwsh
         run: |
           $ref = "${{ github.ref_name }}"
           $inputTag = "${{ github.event.inputs.tag }}"
-          $version = if ($inputTag) { $inputTag } elseif ($ref -and $ref.StartsWith("v")) { $ref } else { "v1.0.0" }
+          $ver = if ($inputTag) { $inputTag } elseif ($ref -and $ref.StartsWith("v")) { $ref } else { "v1.0.0" }
+          "version=$ver" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+
+      - name: Build Application & NSIS Installer
+        shell: pwsh
+        run: |
+          $version = "${{ steps.version-step.outputs.version }}"
           
           # Sinkronkan productVersion di wails.json
           $cleanVersion = $version.TrimStart('v')
@@ -91,6 +104,13 @@ jobs:
           
           # Eksekusi skrip build rilis
           ./scripts/build-release.ps1 -Version $version
+
+      - name: Generate Artifact Attestation (Cryptographic Provenance)
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: |
+            build/bin/*Setup.exe
+            build/bin/*Portable.zip
 
       - name: Upload Build Artifacts (Actions Storage)
         uses: actions/upload-artifact@v4
@@ -104,17 +124,34 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+  publish-release:
+    name: Manual Approval & Publish Release
+    needs: [build]
+    if: startsWith(github.ref, 'refs/tags/v') || github.event.inputs.tag != ''
+    runs-on: ubuntu-latest
+    # Benteng Pertahanan: Environment release-approval memerlukan review/approval manual
+    # dari pemilik repositori di antarmuka GitHub sebelum file dipublikasikan.
+    environment: release-approval
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ServerWatch-Windows-AMD64
+          path: release-artifacts
+
       - name: Publish to GitHub Releases
         uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/v') || github.event.inputs.tag != ''
         with:
-          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
-          name: ServerWatch ${{ github.event.inputs.tag || github.ref_name }}
+          tag_name: ${{ needs.build.outputs.release_version }}
+          name: ServerWatch ${{ needs.build.outputs.release_version }}
           files: |
-            build/bin/*Setup.exe
-            build/bin/*Portable.zip
-            build/bin/SHA256SUMS.txt
-            build/bin/CARA_PAKAI.txt
+            release-artifacts/*Setup.exe
+            release-artifacts/*Portable.zip
+            release-artifacts/SHA256SUMS.txt
+            release-artifacts/CARA_PAKAI.txt
           generate_release_notes: true
           draft: false
           prerelease: false
