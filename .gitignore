@@ -40,3 +40,6 @@ Thumbs.db
 # Local & private notes (never committed to git)
 .local-notes/
 *.local.md
+
+# Knowledge graph (graphify output)
+graphify-out/
