@@ -27,3 +27,7 @@ Aplikasi Desktop Windows untuk Monitoring Server & Database Berbasis SSH Agentle
 - Mode Dev: `wails dev`
 - Build Executable: `wails build -s`
 - Binary Output: `build/bin/ServerWatch.exe`
+
+## Kontribusi & Permintaan Fitur
+Sebelum mengajukan penambahan fitur baru, harap baca [**Panduan Kontribusi (CONTRIBUTING.md)**](CONTRIBUTING.md).
+> **PENTING**: Setiap permintaan fitur baru **wajib dibuatkan Issue terlebih dahulu** di halaman GitHub Issues agar dapat didiskusikan sebelum tahap penulisan kode dimulai.

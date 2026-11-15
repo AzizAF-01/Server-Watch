@@ -1,0 +1,58 @@
+name: 🚀 Permintaan Fitur (Feature Request)
+description: Usulkan ide atau penambahan fitur baru untuk ServerWatch
+title: "[Feature]: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### 📋 Formulir Pengajuan Fitur Baru
+        Terima kasih atas usulan Anda! Harap lengkapi formulir di bawah ini agar ide Anda dapat dibahas dan diselaraskan dengan arsitektur sistem ServerWatch sebelum tahap implementasi dimulai.
+
+  - type: textarea
+    id: user-story
+    attributes:
+      label: Latar Belakang & Masalah (User Story)
+      description: Masalah apa yang sedang dihadapi atau kebutuhan apa yang belum terpenuhi saat ini?
+      placeholder: "Sebagai administrator server, saya membutuhkan... agar saya dapat..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Solusi atau Fitur yang Diusulkan
+      description: Jelaskan bagaimana fitur ini diharapkan bekerja secara fungsional.
+      placeholder: "Menambahkan opsi atau visualisasi pada menu..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Kriteria Penerimaan (Acceptance Criteria)
+      description: Daftar kondisi spesifik yang harus terpenuhi agar fitur ini dianggap selesai dan berhasil.
+      placeholder: |
+        - [ ] Pengguna dapat melihat grafik X pada halaman Y.
+        - [ ] Nilai ambang batas dapat diatur melalui menu Settings.
+        - [ ] Unit test backend dan build frontend berhasil.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatif Lain yang Sempat Dipertimbangkan
+      description: Apakah ada solusi alternatif atau workaround sementara yang pernah dicoba?
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Konfirmasi Alur Kontribusi
+      options:
+        - label: Saya memahami bahwa pembuatan Issue ini wajib dilakukan sebelum proses koding atau Pull Request dibuka.
+          required: true
+        - label: Saya sudah memeriksa daftar Issue untuk memastikan usulan ini belum pernah diajukan sebelumnya.
+          required: true
