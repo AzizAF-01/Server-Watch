@@ -3,6 +3,18 @@
 Semua perubahan penting pada proyek **ServerWatch** akan didokumentasikan di berkas ini.
 Format ini didasarkan pada [Keep a Changelog](https://keepachangelog.com/id/1.0.0/) dan proyek ini mematuhi [Semantic Versioning](https://semver.org/lang/id/).
 
+## [1.0.1] - 2026-11-15
+
+### Diubah & Ditingkatkan (UI Polish)
+- **Pembersihan Antarmuka**: Menghilangkan label kode spesifikasi internal (FR-xx dan SEC-xx) dari tab Pengaturan (*Settings*), Ekspor Laporan, dan Uptime agar tampilan lebih ramah pengguna dan profesional.
+- **Dokumentasi & Arsitektur**: Menambahkan dokumen audit grafik arsitektur sistem (`docs/ARCHITECTURE_GRAPH.md`).
+- **Aturan Kontribusi & Issue Template**: Menerapkan alur wajib pembuatan Issue sebelum penambahan fitur baru melalui `AGENTS.md`, `CONTRIBUTING.md`, dan formulir GitHub Issue Template.
+
+### Keamanan & CI/CD Hardening
+- **Pipeline Release 2-Stage**: Menerapkan approval gate (`release-approval`) pada GitHub Actions untuk mencegah eksekusi rilis liar jika token PAT bocor.
+- **GitHub Artifact Attestation**: Penandatanganan biner secara kriptografis menggunakan Sigstore OIDC untuk membuktikan keaslian berkas installer.
+- **Workflow CI Test**: Menambahkan pengujian otomatis terpisah untuk Pull Request.
+
 ## [1.0.0] - 2026-11-07
 
 ### Ditambahkan

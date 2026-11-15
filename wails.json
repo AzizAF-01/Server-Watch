@@ -13,7 +13,7 @@
   "info": {
     "companyName": "FilaOne",
     "productName": "ServerWatch",
-    "productVersion": "1.0.0",
+    "productVersion": "1.0.1",
     "copyright": "Copyright © 2026 FilaOne. All rights reserved.",
     "comments": "Multi-Server SSH Telemetry, Database Backup & DevOps Monitoring Desktop Application"
   }
