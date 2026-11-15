@@ -519,6 +519,17 @@
         ptyFitAddon.fit();
       } catch (e) {}
 
+      // Copy text to clipboard on Ctrl+C if text is selected, instead of sending SIGINT
+      ptyTerm.attachCustomKeyEventHandler((arg: KeyboardEvent) => {
+        if (arg.ctrlKey && arg.code === 'KeyC' && ptyTerm?.hasSelection()) {
+          if (arg.type === 'keydown') {
+            navigator.clipboard.writeText(ptyTerm.getSelection()).catch(() => {});
+          }
+          return false;
+        }
+        return true;
+      });
+
       const cols = ptyTerm.cols || 100;
       const rows = ptyTerm.rows || 30;
 

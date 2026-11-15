@@ -1,16 +1,16 @@
 # Graph Report - Monitoring-server  (2026-11-15)
 
 ## Corpus Check
-- 62 files · ~106,972 words
+- 62 files · ~107,164 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 912 nodes · 1483 edges · 83 communities (34 shown, 41 thin omitted)
+- 920 nodes · 1492 edges · 81 communities (32 shown, 41 thin omitted)
 - Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 53 edges (avg confidence: 0.86)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `a157221a`
+- Built from commit: `c1df397f`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -28,9 +28,9 @@
 - models.ts
 - runtime/package.json
 - UptimeMonitor
-- BackupEngine
+- s3.go
 - compilerOptions
-- time.Time
+- BackupScheduler
 - wails.json
 - BackupJobLog
 - Server Detail View Mockup
@@ -41,7 +41,7 @@
 - Alert Management Mockup UI
 - compilerOptions
 - Wails Universal Logo Graphic
-- AlertEvent
+- .Close
 - ServerStatus
 - Exporter
 - WCAG AA Contrast & Keyboard Focus Remediation
@@ -55,7 +55,7 @@
 - DatabaseActiveQuery
 - DatabaseSchemaItem
 - DatabaseSlowQuery
-- Communities (69 total, 33 thin omitted)
+- Graph Report - Monitoring-server  (2026-11-15)
 - DiscoveredDatabase
 - DiskPartition
 - FirewallStatus
@@ -71,16 +71,14 @@
 - SystemdService
 - EventsOnMultiple
 - AlertRule
-- Manager
+- Communities (83 total, 41 thin omitted)
 - CI Test & Build Validation Workflow
 - Frontend Vite + Svelte Architecture Notes
 - Nunito Typography SIL Open Font License 1.1
 - serverwatch
-- .Close
+- BackupSchedule
 - 🚨 Siklus Hidup Standar Pengerjaan Tugas (Issue ➔ Branch ➔ PR ➔ Merge ➔ Hapus Branch)
-- DBDetector
-- NewApp
-- boundedBuffer
+- DatabaseType
 - AlertEvent
 - BackupJobLog
 - BackupSchedule
@@ -95,8 +93,8 @@
 1. `App` - 86 edges
 2. `SQLiteStorage` - 63 edges
 3. `Server` - 38 edges
-4. `SSHPool` - 30 edges
-5. `Communities (69 total, 33 thin omitted)` - 29 edges
+4. `Communities (83 total, 41 thin omitted)` - 35 edges
+5. `SSHPool` - 30 edges
 6. `DatabaseConfig` - 25 edges
 7. `KeychainManager` - 21 edges
 8. `BackupEngine` - 17 edges
@@ -123,23 +121,23 @@
 - **Anti-Slop Accessibility & Design System Standardization** — anti_slop_audit_001_2026_11_05_wcag_contrast_remediation, anti_slop_audit_002_2026_11_07_aria_semantics_remediation, changelog_security_hardening [INFERRED 0.85]
 - **Agentless SSH Security Boundary & Trust Architecture** — docs_prd_threat_model_trust_boundary, docs_prd_wails_binding_security, docs_security_audit_report_vuln_01_command_dialog, docs_mockups_src_05_terminal_log_xss_protection_demo [INFERRED 0.95]
 
-## Communities (83 total, 41 thin omitted)
+## Communities (81 total, 41 thin omitted)
 
 ### Community 2 - "types.go"
-Cohesion: 0.09
-Nodes (30): cpuTickSample, netTickSample, prevSample, sync.Map, calcCPUUsage(), Collector, NewCollector(), parseCPULines() (+22 more)
+Cohesion: 0.08
+Nodes (33): cpuTickSample, netTickSample, prevSample, sync.Map, time.Time, calcCPUUsage(), Collector, parseCPULines() (+25 more)
 
 ### Community 3 - "context.Context"
-Cohesion: 0.08
-Nodes (22): context.Context, ExtractRemoteFilePath(), DBCollector, NewDBCollector(), parseMySQLStatus(), parseMySQLVar(), TestParseRedisQueryAnalysisAndTables(), ValidateDBConfig() (+14 more)
+Cohesion: 0.11
+Nodes (24): BackupProgressCallback, context.Context, ExtractRemoteFilePath(), BackupEngine, NewBackupEngine(), TestValidateBackupInputs(), ValidateIdentifier(), ValidateRemotePath() (+16 more)
 
 ### Community 4 - "App"
-Cohesion: 0.07
-Nodes (5): setOSAutoStart(), context.CancelFunc, BackupVerifyResult, BroadcastResult, App
+Cohesion: 0.06
+Nodes (6): setOSAutoStart(), context.CancelFunc, BackupVerifyResult, BroadcastResult, DatabaseTableItem, App
 
 ### Community 5 - "SSHPool"
-Cohesion: 0.26
-Nodes (8): golang.org/x/crypto/ssh.AuthMethod, golang.org/x/crypto/ssh.Client, golang.org/x/crypto/ssh.ClientConfig, io.Writer, ConnectionTestResult, ServerConfig, SSHPool, newBoundedBuffer()
+Cohesion: 0.06
+Nodes (30): NewApp(), bytes.Buffer, golang.org/x/crypto/ssh.AuthMethod, golang.org/x/crypto/ssh.Client, golang.org/x/crypto/ssh.ClientConfig, golang.org/x/crypto/ssh.Session, io.WriteCloser, io.Writer (+22 more)
 
 ### Community 6 - ".convertValues"
 Cohesion: 0.11
@@ -153,12 +151,16 @@ Nodes (45): Release Approval Protected Environment, Cryptographic Build Provenan
 Cohesion: 0.06
 Nodes (31): dependencies, @xterm/addon-fit, @xterm/xterm, devDependencies, svelte, svelte-check, svelte-preprocess, @sveltejs/vite-plugin-svelte (+23 more)
 
+### Community 9 - "KeychainManager"
+Cohesion: 0.10
+Nodes (6): net/http.Client, Notifier, NewNotifier(), TestSendTelegramAndWebhook(), KeychainManager, NewKeychainManager()
+
 ### Community 10 - "testing.T"
 Cohesion: 0.08
-Nodes (34): containerStat, testing.T, TestBackupSchedulerIsDue(), TestRestoreDatabaseValidation(), TestParseMySQLQueryAnalysis(), TestParseMySQLStatus_Mysqladmin(), TestParseMySQLStatus_TSV(), TestValidateDBConfig() (+26 more)
+Nodes (33): containerStat, testing.T, TestBackupSchedulerIsDue(), TestRestoreDatabaseValidation(), TestParseMySQLQueryAnalysis(), TestParseMySQLStatus_Mysqladmin(), TestParseMySQLStatus_TSV(), TestValidateDBConfig() (+25 more)
 
 ### Community 11 - "SQLiteStorage"
-Cohesion: 0.13
+Cohesion: 0.11
 Nodes (3): database/sql.DB, SQLiteStorage, NewSQLiteStorage()
 
 ### Community 12 - "models.ts"
@@ -173,17 +175,17 @@ Nodes (18): author, bugs, url, description, homepage, keywords, license, main (+
 Cohesion: 0.16
 Nodes (6): UptimeMonitor, Checker, NewChecker(), TestCheckLocalHTTPAndTCP(), TestValidateMonitorTarget(), ValidateMonitorTarget()
 
-### Community 15 - "BackupEngine"
-Cohesion: 0.12
-Nodes (20): BackupProgressCallback, S3Client, net/http.Client, net/http.Request, net/url.Values, BackupEngine, NewBackupEngine(), TestValidateBackupInputs() (+12 more)
+### Community 15 - "s3.go"
+Cohesion: 0.22
+Nodes (12): S3Client, net/http.Request, net/url.Values, canonicalQueryString(), hmacSHA256(), NewS3Client(), sha256Hex(), signS3Request() (+4 more)
 
 ### Community 16 - "compilerOptions"
 Cohesion: 0.11
 Nodes (17): compilerOptions, allowJs, baseUrl, checkJs, isolatedModules, module, resolveJsonModule, target (+9 more)
 
-### Community 17 - "time.Time"
-Cohesion: 0.26
-Nodes (5): sync.WaitGroup, time.Time, BackupScheduler, NewBackupScheduler(), BackupProgressEvent
+### Community 17 - "BackupScheduler"
+Cohesion: 0.36
+Nodes (3): sync.WaitGroup, BackupScheduler, NewBackupScheduler()
 
 ### Community 18 - "wails.json"
 Cohesion: 0.12
@@ -229,57 +231,45 @@ Nodes (4): Anti-Slop UI & Code Audit 001 Report, WCAG AA Contrast & Keyboard Foc
 Cohesion: 0.67
 Nodes (3): icon(), ICONS, renderShell()
 
-### Community 42 - "Communities (69 total, 33 thin omitted)"
-Cohesion: 0.05
-Nodes (39): Communities (69 total, 33 thin omitted), Community 10 - "Engine & Collector Test Suite", Community 11 - "SQLite Storage Engine", Community 12 - "Svelte UI Views & Terminal", Community 13 - "Project Metadata & Manifest", Community 14 - "Uptime Monitor & TCP Checker", Community 15 - "S3 Client & Storage Protocol", Community 16 - "TypeScript Core Configuration" (+31 more)
+### Community 42 - "Graph Report - Monitoring-server  (2026-11-15)"
+Cohesion: 0.18
+Nodes (11): Community Hubs (Navigation), Corpus Check, God Nodes (most connected - your core abstractions), Graph Freshness, Graph Report - Monitoring-server  (2026-11-15), Hyperedges (group relationships), Import Cycles, Knowledge Gaps (+3 more)
 
 ### Community 56 - "EventsOnMultiple"
 Cohesion: 0.67
 Nodes (3): EventsOn(), EventsOnce(), EventsOnMultiple()
 
-### Community 58 - "Manager"
-Cohesion: 0.18
-Nodes (8): golang.org/x/crypto/ssh.Session, io.WriteCloser, sync.Mutex, sync.RWMutex, Manager, NewManager(), Session, windowChangeMsg
+### Community 58 - "Communities (83 total, 41 thin omitted)"
+Cohesion: 0.06
+Nodes (35): Communities (83 total, 41 thin omitted), Community 10 - "testing.T", Community 11 - "SQLiteStorage", Community 12 - "models.ts", Community 13 - "runtime/package.json", Community 14 - "UptimeMonitor", Community 15 - "BackupEngine", Community 16 - "compilerOptions" (+27 more)
 
 ### Community 70 - "🚨 Siklus Hidup Standar Pengerjaan Tugas (Issue ➔ Branch ➔ PR ➔ Merge ➔ Hapus Branch)"
-Cohesion: 0.22
-Nodes (8): Langkah 1: Wajib Buat Issue Terlebih Dahulu, Langkah 2: Buat Branch Baru untuk Pengerjaan, Langkah 3: Koding & Pengujian Mandiri, Langkah 4: Buka Pull Request (PR), Langkah 5: Merge & Wajib Hapus Branch, ServerWatch - AI Agent Guidelines & Project Rules, 🚨 Siklus Hidup Standar Pengerjaan Tugas (Issue ➔ Branch ➔ PR ➔ Merge ➔ Hapus Branch), Standar Kualitas & Keamanan Kode Proyek
-
-### Community 71 - "DBDetector"
-Cohesion: 0.36
-Nodes (5): extractDBNames(), extractVersion(), DBDetector, NewDBDetector(), DiscoveredDatabase
-
-### Community 72 - "NewApp"
-Cohesion: 0.25
-Nodes (5): NewApp(), NewNotifier(), TestSendTelegramAndWebhook(), NewSSHPool(), main()
-
-### Community 73 - "boundedBuffer"
-Cohesion: 0.29
-Nodes (4): bytes.Buffer, net.Conn, connectSSHAgent(), boundedBuffer
+Cohesion: 0.18
+Nodes (9): 🗺️ Aturan Pemeliharaan Knowledge Graph (Graphify), Langkah 1: Wajib Buat Issue Terlebih Dahulu, Langkah 2: Buat Branch Baru untuk Pengerjaan, Langkah 3: Koding & Pengujian Mandiri, Langkah 4: Buka Pull Request (PR), Langkah 5: Merge & Wajib Hapus Branch, ServerWatch - AI Agent Guidelines & Project Rules, 🚨 Siklus Hidup Standar Pengerjaan Tugas (Issue ➔ Branch ➔ PR ➔ Merge ➔ Hapus Branch) (+1 more)
 
 ### Community 80 - "pull_request_template.md"
 Cohesion: 0.50
 Nodes (3): Checklist Kontributor & Reviewer, Deskripsi Perubahan, 🔗 Issue Terkait (Wajib)
 
 ## Knowledge Gaps
-- **151 isolated node(s):** `ICONS`, `name`, `private`, `version`, `type` (+146 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 408 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **159 isolated node(s):** `ICONS`, `name`, `private`, `version`, `type` (+154 more)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 414 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **41 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `App` connect `App` to `types.go`, `context.Context`, `SSHPool`, `.Close`, `DBDetector`, `NewApp`, `KeychainManager`, `testing.T`, `SQLiteStorage`, `UptimeMonitor`, `BackupEngine`, `time.Time`, `BackupJobLog`, `AlertRule`, `Manager`, `AlertEvent`, `Exporter`?**
-  _High betweenness centrality (0.063) - this node is a cross-community bridge._
-- **Why does `SQLiteStorage` connect `SQLiteStorage` to `types.go`, `context.Context`, `App`, `SSHPool`, `.Close`, `NewApp`, `UptimeMonitor`, `BackupEngine`, `time.Time`, `BackupJobLog`, `AlertRule`, `Manager`, `AlertEvent`, `ServerStatus`, `Exporter`?**
-  _High betweenness centrality (0.039) - this node is a cross-community bridge._
-- **Why does `SSHPool` connect `SSHPool` to `types.go`, `context.Context`, `App`, `DBDetector`, `NewApp`, `boundedBuffer`, `testing.T`, `KeychainManager`, `SQLiteStorage`, `UptimeMonitor`, `BackupEngine`, `Manager`?**
+- **Why does `App` connect `App` to `types.go`, `context.Context`, `SSHPool`, `BackupSchedule`, `KeychainManager`, `testing.T`, `SQLiteStorage`, `UptimeMonitor`, `s3.go`, `BackupScheduler`, `BackupJobLog`, `AlertRule`, `.Close`, `Exporter`?**
+  _High betweenness centrality (0.062) - this node is a cross-community bridge._
+- **Why does `SQLiteStorage` connect `SQLiteStorage` to `types.go`, `context.Context`, `App`, `SSHPool`, `BackupSchedule`, `DatabaseType`, `KeychainManager`, `UptimeMonitor`, `BackupScheduler`, `BackupJobLog`, `AlertRule`, `.Close`, `ServerStatus`, `Exporter`?**
+  _High betweenness centrality (0.038) - this node is a cross-community bridge._
+- **Why does `SSHPool` connect `SSHPool` to `types.go`, `context.Context`, `App`, `KeychainManager`, `testing.T`, `SQLiteStorage`, `UptimeMonitor`?**
   _High betweenness centrality (0.018) - this node is a cross-community bridge._
 - **What connects `ICONS`, `name`, `private` to the rest of the system?**
-  _151 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _159 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `runtime.js` be split into smaller, more focused modules?**
   _Cohesion score 0.03076923076923077 - nodes in this community are weakly interconnected._
 - **Should `App.js` be split into smaller, more focused modules?**
   _Cohesion score 0.03278688524590164 - nodes in this community are weakly interconnected._
 - **Should `types.go` be split into smaller, more focused modules?**
-  _Cohesion score 0.08710801393728224 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07922705314009662 - nodes in this community are weakly interconnected._
