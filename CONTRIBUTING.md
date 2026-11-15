@@ -49,6 +49,11 @@ Setiap pengerjaan tugas — **baik penambahan fitur baru, perbaikan bug, pembers
   ```powershell
   npm --prefix frontend run build
   ```
+* Perbarui peta arsitektur (*knowledge graph*):
+  ```powershell
+  & (Get-Content graphify-out\.graphify_python) -m graphify update .
+  Copy-Item graphify-out\GRAPH_REPORT.md docs\ARCHITECTURE_GRAPH.md -Force
+  ```
 
 ### 4. Buka Pull Request (PR)
 * Push branch ke remote: `git push origin <nama-branch>`.

@@ -45,6 +45,12 @@ Setiap pengerjaan tugas di repositori ini — **entah bersumber dari PRD, permin
 * Wajib validasi sebelum membuat PR:
   - `go test ./...`
   - `npm --prefix frontend run build`
+  - **Wajib Sinkronisasi Graphify**: Perbarui knowledge graph dan dokumentasi arsitektur proyek:
+    ```powershell
+    & (Get-Content graphify-out\.graphify_python) -m graphify update .
+    Copy-Item graphify-out\GRAPH_REPORT.md docs\ARCHITECTURE_GRAPH.md -Force
+    ```
+    Pastikan berkas `docs/ARCHITECTURE_GRAPH.md` ikut disertakan dalam commit branch sebelum membuat PR.
 
 ### Langkah 4: Buka Pull Request (PR)
 * Push branch ke remote: `git push origin <nama-branch>`.
@@ -74,3 +80,15 @@ Setiap pengerjaan tugas di repositori ini — **entah bersumber dari PRD, permin
 - **Keamanan Kredensial (SEC-02, SEC-08):** Password SSH, secret S3, database password, dan token notifikasi HANYA boleh disimpan di Windows Credential Manager (OS Keychain), dilarang disimpan di SQLite atau dicetak dalam plain text.
 - **Sanitasi Input (SEC-01, SEC-06):** Semua teks dari remote server/terminal/log wajib disanitasi sebelum ditampilkan di UI guna mencegah XSS dan Command Injection.
 - **Pengujian Mandiri:** Setiap kode baru wajib divalidasi dengan `go test ./...` dan pengujian build frontend `npm run build`.
+
+---
+
+## 🗺️ Aturan Pemeliharaan Knowledge Graph (Graphify)
+Repositori ini memiliki peta arsitektur dan *knowledge graph* di `graphify-out/` dan [docs/ARCHITECTURE_GRAPH.md](docs/ARCHITECTURE_GRAPH.md).
+- **Wajib Update Setiap Ada Perubahan**: Setiap kali ada penambahan fitur, perbaikan bug, refactor, atau modifikasi file kode/arsitektur, AI Agent **WAJIB** memperbarui grafik pengetahuan sebelum membuka Pull Request.
+- **Perintah Pembaruan Cepat (Bebas Biaya Token / AST-only)**:
+  ```powershell
+  & (Get-Content graphify-out\.graphify_python) -m graphify update .
+  Copy-Item graphify-out\GRAPH_REPORT.md docs\ARCHITECTURE_GRAPH.md -Force
+  ```
+- **Kueri Arsitektur**: Sebelum memodifikasi arsitektur atau menjawab pertanyaan struktural yang kompleks, AI Agent disarankan menjalankan `graphify query "<pertanyaan>"` guna menelusuri dependensi modul dan relasi antar-komponen secara akurat.
