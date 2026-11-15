@@ -28,7 +28,58 @@ html, body {
   background: var(--bg);
   color: var(--text);
   font: 13px/1.45 "Segoe UI", system-ui, sans-serif;
+  user-select: text;
+}
+
+::selection {
+  background: rgba(56, 163, 165, 0.4);
+  color: #ffffff;
+}
+
+/* UI chrome and interactive controls should not be selectable */
+.titlebar,
+.side,
+.brand,
+button,
+.btn,
+.nav a,
+.nav button.nav-item,
+.subnav-tabs button,
+.seg button,
+.chip,
+.quick-btn,
+.switch,
+.slider,
+.bar,
+.st,
+.db-badge,
+.tag,
+.kbd,
+svg {
   user-select: none;
+}
+
+/* Content, tables, data displays, terminals, and logs must be selectable */
+.main,
+.content,
+.panel,
+.attn,
+.attn .card,
+table,
+th,
+td,
+pre,
+code,
+input,
+textarea,
+.terminal-body,
+.log-body,
+.db-card,
+.db-stat-item,
+.modal-box,
+.hk-box,
+.selectable {
+  user-select: text;
 }
 
 #app {
