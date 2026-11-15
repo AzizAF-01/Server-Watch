@@ -107,7 +107,7 @@
     try {
       settings.retentionDays = Number(settings.retentionDays) || 30;
       await SaveAppSettings(settings);
-      showFeedback('ok', 'Pengaturan berhasil disimpan. Token rahasia tersimpan aman di OS Keychain (SEC-08).');
+      showFeedback('ok', 'Pengaturan berhasil disimpan. Token rahasia tersimpan aman di OS Keychain.');
       await loadSettings();
     } catch (err: any) {
       showFeedback('err', 'Gagal menyimpan pengaturan: ' + (err?.message || String(err)));
@@ -210,7 +210,7 @@
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
       </svg>
-      Channel Notifikasi Eksternal (FR-25)
+      Channel Notifikasi Eksternal
     </button>
 
     <button
@@ -238,7 +238,7 @@
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
       </svg>
-      Export Laporan & Retensi Data (FR-29 & FR-31)
+      Export Laporan & Retensi Data
     </button>
 
     <button
@@ -252,7 +252,7 @@
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
         <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
       </svg>
-      Aplikasi Desktop & Background (FR-32 & FR-33)
+      Aplikasi Desktop & Background
     </button>
   </div>
 
@@ -274,7 +274,7 @@
 
           <div class="form-group" style="margin-bottom:12px">
             <label for="tg-token">
-              Telegram Bot Token (SEC-08 Keychain)
+              Telegram Bot Token
               {#if settings.notifications.hasTelegramToken}
                 <span class="tag" style="margin-left:6px; color:var(--ok)">Tersimpan di Keychain</span>
               {/if}
@@ -324,7 +324,7 @@
 
           <div class="form-group" style="margin-bottom:14px">
             <label for="wh-url">
-              Webhook URL (SEC-08 Keychain)
+              Webhook URL
               {#if settings.notifications.hasWebhookUrl}
                 <span class="tag" style="margin-left:6px; color:var(--ok)">Tersimpan di Keychain</span>
               {/if}
@@ -352,7 +352,7 @@
 
       <!-- Notification Behavior Rules -->
       <div class="panel" style="padding:18px">
-        <div style="font-weight:600; font-size:14px; margin-bottom:12px">Preferensi Pemicu Notifikasi (FR-26 & FR-44)</div>
+        <div style="font-weight:600; font-size:14px; margin-bottom:12px">Preferensi Pemicu Notifikasi</div>
         <div style="display:grid; gap:12px">
           <div style="display:flex; align-items:center; justify-content:space-between; padding-bottom:10px; border-bottom:1px solid var(--line)">
             <div>
@@ -370,7 +370,7 @@
 
           <div style="display:flex; align-items:center; justify-content:space-between; padding-bottom:10px; border-bottom:1px solid var(--line)">
             <div>
-              <div style="font-weight:500">Kirim Notifikasi Saat Insiden Pulih (Resolved) (FR-26)</div>
+              <div style="font-weight:500">Kirim Notifikasi Saat Insiden Pulih (Resolved)</div>
               <div style="font-size:12px; color:var(--dim)">Beri tahu ketika penggunaan CPU, RAM, Disk, SSH, atau Website kembali normal</div>
             </div>
             <label class="switch">
@@ -381,7 +381,7 @@
 
           <div style="display:flex; align-items:center; justify-content:space-between">
             <div>
-              <div style="font-weight:500">Kirim Notifikasi Status Backup Database (FR-44)</div>
+              <div style="font-weight:500">Kirim Notifikasi Status Backup Database</div>
               <div style="font-size:12px; color:var(--dim)">Beri tahu hasil eksekusi dump backup database (sukses maupun gagal)</div>
             </div>
             <label class="switch">
@@ -464,7 +464,7 @@
         </div>
         <div class="form-group">
           <label for="s3-sk">
-            Secret Access Key (SEC-08 Keychain)
+            Secret Access Key
             {#if settings.s3Backup.hasSecretKey}
               <span class="tag" style="margin-left:6px; color:var(--ok)">Tersimpan di Keychain</span>
             {/if}
@@ -475,7 +475,7 @@
             placeholder={settings.s3Backup.hasSecretKey ? '•••••••••••••••• (Kosongkan jika tidak diubah)' : 'Masukkan Secret Access Key S3/R2'}
             bind:value={settings.s3Backup.secretAccessKey}
           />
-          <div class="note">Disimpan terisolasi di Windows Credential Manager (SEC-08 & SEC-15)</div>
+          <div class="note">Disimpan terisolasi di Windows Credential Manager</div>
         </div>
       </div>
 
@@ -498,7 +498,7 @@
     <div id="panel-reports" role="tabpanel" aria-labelledby="tab-reports" style="display:grid; grid-template-columns: 1fr 1fr; gap:16px">
       <!-- Report Export Card -->
       <div class="panel" style="padding:18px">
-        <div style="font-weight:600; font-size:14.5px; margin-bottom:6px">Export Laporan Infrastruktur & Uptime (FR-31)</div>
+        <div style="font-weight:600; font-size:14.5px; margin-bottom:6px">Export Laporan Infrastruktur & Uptime</div>
         <div style="font-size:12.5px; color:var(--muted); margin-bottom:16px">
           Unduh laporan lengkap yang mencakup status seluruh server, penggunaan CPU/RAM/Disk terakhir, status endpoint Uptime & masa berlaku SSL, serta riwayat insiden alert.
         </div>
@@ -526,7 +526,7 @@
 
       <!-- Data Retention Card -->
       <div class="panel" style="padding:18px">
-        <div style="font-weight:600; font-size:14.5px; margin-bottom:6px">Retensi Data Historis SQLite (FR-29)</div>
+        <div style="font-weight:600; font-size:14.5px; margin-bottom:6px">Retensi Data Historis SQLite</div>
         <div style="font-size:12.5px; color:var(--muted); margin-bottom:14px">
           Atur berapa lama riwayat metrik time-series disimpan di database lokal sebelum dibersihkan otomatis.
         </div>
@@ -545,12 +545,12 @@
 
   {:else if activeTab === 'desktop'}
     <div id="panel-desktop" role="tabpanel" aria-labelledby="tab-desktop" class="panel" style="padding:18px">
-      <div style="font-weight:600; font-size:14.5px; margin-bottom:14px">Perilaku Aplikasi Desktop Windows (FR-32 & FR-33)</div>
+      <div style="font-weight:600; font-size:14.5px; margin-bottom:14px">Perilaku Aplikasi Desktop Windows</div>
 
       <div style="display:grid; gap:14px">
         <div style="display:flex; align-items:center; justify-content:space-between; padding-bottom:12px; border-bottom:1px solid var(--line)">
           <div>
-            <div style="font-weight:500">Konfirmasi Sebelum Eksekusi Perintah Terminal SSH (SEC-06)</div>
+            <div style="font-weight:500">Konfirmasi Sebelum Eksekusi Perintah Terminal SSH</div>
             <div style="font-size:12px; color:var(--dim)">
               Tampilkan kotak dialog konfirmasi pop-up dari sistem operasi Windows sebelum perintah terminal SSH dijalankan. Nonaktifkan opsi ini jika Anda ingin menjalankan perintah di tab Terminal secara instan tanpa konfirmasi pop-up.
             </div>
@@ -563,7 +563,7 @@
 
         <div style="display:flex; align-items:center; justify-content:space-between; padding-bottom:12px; border-bottom:1px solid var(--line)">
           <div>
-            <div style="font-weight:500">Tetap Memonitor di Latar Belakang Saat Jendela Ditutup (FR-32)</div>
+            <div style="font-weight:500">Tetap Memonitor di Latar Belakang Saat Jendela Ditutup</div>
             <div style="font-size:12px; color:var(--dim)">
               Saat tombol tutup (X) ditekan, tawarkan opsi untuk meminimalkan aplikasi ke latar belakang agar polling SSH dan jadwal backup tetap berjalan.
             </div>
@@ -576,7 +576,7 @@
 
         <div style="display:flex; align-items:center; justify-content:space-between">
           <div>
-            <div style="font-weight:500">Jalankan ServerWatch Otomatis Saat Windows Menyala (Auto-Start) (FR-33)</div>
+            <div style="font-weight:500">Jalankan ServerWatch Otomatis Saat Windows Menyala (Auto-Start)</div>
             <div style="font-size:12px; color:var(--dim)">
               Mendaftarkan executable ServerWatch ke startup profil pengguna Windows (HKCU Run).
             </div>

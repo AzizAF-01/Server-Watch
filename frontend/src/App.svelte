@@ -3461,7 +3461,7 @@
 
         {#if restoreTargetMode === 'custom'}
           <div class="form-group">
-            <label for="restore-custom-db">Nama Database Tujuan Baru (SEC-16)</label>
+            <label for="restore-custom-db">Nama Database Tujuan Baru</label>
             <input
               id="restore-custom-db"
               type="text"
@@ -3472,7 +3472,7 @@
           </div>
         {:else}
           <div style="padding:10px 12px; border-radius:var(--radius-md); background:rgba(229,83,75,0.1); border:1px solid rgba(229,83,75,0.35); color:var(--crit); font-size:12px; margin-top:8px">
-            <b>Perhatian:</b> Mode In-Place akan menimpa tabel di dalam database <b>{restoreLogItem.databaseName}</b> dengan isi dari arsip backup ini. Dialog konfirmasi sistem operasi (SEC-06) akan muncul sebelum eksekusi dimulai.
+            <b>Perhatian:</b> Mode In-Place akan menimpa tabel di dalam database <b>{restoreLogItem.databaseName}</b> dengan isi dari arsip backup ini. Dialog konfirmasi sistem operasi akan muncul sebelum eksekusi dimulai.
           </div>
         {/if}
       </div>

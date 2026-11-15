@@ -221,7 +221,7 @@
     <input type="text" placeholder="Cari nama atau URL endpoint..." bind:value={searchQuery} />
   </div>
 
-  <button class="btn" on:click={() => handleExport('html')} title="Ekspor Laporan Eksekutif HTML/PDF (FR-31)">
+  <button class="btn" on:click={() => handleExport('html')} title="Ekspor Laporan Eksekutif HTML/PDF">
     <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
     Export Laporan
   </button>
@@ -284,7 +284,7 @@
           <tr>
             <th style="width:110px">Status</th>
             <th>Nama & Target Endpoint</th>
-            <th>Lokasi Cek (FR-15)</th>
+            <th>Lokasi Cek</th>
             <th>Respons / Kode</th>
             <th>Latency</th>
             <th>Sertifikat SSL</th>
@@ -311,7 +311,7 @@
                       class="btn ghost"
                       style="height:28px; padding:0 8px; font-size:11px; color:var(--accent)"
                       on:click={() => handleOpenBrowser(mon.target)}
-                      title="Buka {mon.target} di browser default OS (SEC-12)"
+                      title="Buka {mon.target} di browser default OS"
                       aria-label="Buka {mon.name} di browser default"
                     >
                       Buka Browser
@@ -457,7 +457,7 @@
 
         <div class="row3">
           <div class="form-group">
-            <label for="up-server">Lokasi Eksekusi Pengecekan (FR-15)</label>
+            <label for="up-server">Lokasi Eksekusi Pengecekan</label>
             <select id="up-server" bind:value={formData.serverId}>
               <option value="">Langsung dari Aplikasi Desktop</option>
               {#each servers as s}
