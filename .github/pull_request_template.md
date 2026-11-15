@@ -1,13 +1,14 @@
 ## Deskripsi Perubahan
-<!-- Ringkas perubahan kode atau fitur yang Anda buat dalam PR ini -->
+<!-- Ringkas perubahan kode atau tugas yang Anda kerjakan dalam PR ini -->
 
 ## 🔗 Issue Terkait (Wajib)
-<!-- Setiap penambahan fitur atau perbaikan bug WAJIB merujuk ke Issue yang telah disetujui -->
+<!-- Setiap penambahan fitur, perbaikan bug, atau tugas PRD WAJIB merujuk ke Issue terkait -->
 Closes #<!-- masukkan nomor issue di sini, misal: Closes #12 -->
 
-## Checklist Kontributor
-- [ ] Penambahan fitur ini **telah memiliki Issue resmi** yang dibuat dan didiskusikan terlebih dahulu.
+## Checklist Kontributor & Reviewer
+- [ ] Tugas ini **telah memiliki Issue resmi** yang dibuat dan disepakati terlebih dahulu.
+- [ ] Dikerjakan pada **branch terpisah** (bukan langsung di `main`).
 - [ ] Pengujian unit backend berhasil (`go test ./...`).
-- [ ] Pengujian build frontend berhasil (`npm run build`).
+- [ ] Pengujian build frontend berhasil (`npm --prefix frontend run build`).
 - [ ] Tidak ada kredensial atau rahasia yang dicetak ke dalam log atau berkas teks biasa.
-- [ ] Perubahan kode telah diuji secara lokal.
+- [ ] **Pasca-Merge**: Branch kerja ini akan dihapus setelah PR berhasil di-merge ke `main`.

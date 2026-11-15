@@ -1,25 +1,72 @@
 # ServerWatch - AI Agent Guidelines & Project Rules
 
-Dokumen ini berisi pedoman dan aturan wajib bagi AI Agent (Antigravity, Claude, Gemini, Copilot, dll.) yang bekerja di repositori ServerWatch.
+Dokumen ini berisi pedoman dan aturan **WAJIB** bagi AI Agent (Antigravity, Claude, Gemini, Copilot, dll.) yang bekerja di repositori ServerWatch.
 
 ---
 
-## 🚨 Aturan Wajib: Penambahan Fitur Baru (Feature Request Rule)
+## 🚨 Siklus Hidup Standar Pengerjaan Tugas (Issue ➔ Branch ➔ PR ➔ Merge ➔ Hapus Branch)
 
-Setiap kali pengguna meminta penambahan fitur baru (*feature request* / request tambah fitur):
+Setiap pengerjaan tugas di repositori ini — **entah bersumber dari PRD, permintaan pengguna, bug fix, refactor, pembersihan UI, maupun penambahan fitur baru** — WAJIB mengikuti siklus hidup 5 langkah tanpa terkecuali:
 
-1. **DILARANG langsung menulis kode implementasi sebelum Issue GitHub dibuat.**
-2. **Prosedur Wajib Penanganan Request Fitur:**
-   - **Tahap 1 - Analisis Kebutuhan:** Analisis kebutuhan fitur, batasan teknis (*agentless* SSH, Windows Credential Manager, Wails binding), dan dampaknya terhadap arsitektur (merujuk ke [docs/PRD.md](docs/PRD.md) dan [docs/ARCHITECTURE_GRAPH.md](docs/ARCHITECTURE_GRAPH.md)).
-   - **Tahap 2 - Susun Draf Issue:** Buatkan draf GitHub Issue terstruktur dan sajikan kepada pengguna untuk ditinjau:
-     - **Judul Issue**: `[Feature]: <Deskripsi Singkat Fitur>`
-     - **Latar Belakang / Masalah / User Story**: Mengapa fitur ini dibutuhkan?
-     - **Solusi yang Diusulkan**: Bagaimana cara kerja dan implementasinya?
-     - **Dampak Arsitektur & Keamanan**: Komponen apa saja yang terpengaruh dan aturan keamanan (SEC) apa yang harus dipatuhi?
-     - **Kriteria Penerimaan (*Acceptance Criteria*)**: Daftar checklist pengujian agar fitur dinyatakan selesai.
-   - **Tahap 3 - Buat / Konfirmasi Issue:** Minta konfirmasi pengguna untuk membuat Issue tersebut di GitHub (atau bantu buatkan via GitHub CLI `gh issue create` jika tersedia).
-   - **Tahap 4 - Implementasi Kode:** Hanya setelah Issue terdaftar di GitHub (atau nomor issue telah ditentukan/disepakati pengguna), AI Agent diperbolehkan mulai mengedit kode atau membuat branch baru.
-   - **Tahap 5 - Referensi Commit & PR:** Setiap commit dan PR yang berkaitan wajib menyertakan nomor Issue (contoh: `feat(db): tambahkan visualisasi slow query (closes #XX)`).
+```text
+[1. Buat GitHub Issue] 
+          ↓
+[2. Buat Branch Baru: <type>/<issue-number>-<slug>] 
+          ↓
+[3. Koding & Pengujian Mandiri] 
+          ↓
+[4. Buka Pull Request (Closes #XX)] 
+          ↓
+[5. Merge & Wajib Hapus Branch (Lokal & Remote)]
+```
+
+### Langkah 1: Wajib Buat Issue Terlebih Dahulu
+* **DILARANG** langsung mengedit kode atau membuat branch sebelum Issue GitHub dibuat (atau disepakati draf dan nomor Issue-nya).
+* AI Agent wajib menyusun draf Issue terstruktur untuk pengguna:
+  - **Judul Issue**: `[<Type>]: <Deskripsi Singkat>` (contoh: `[Feature]: ...`, `[Fix]: ...`, `[UI]: ...`, `[Refactor]: ...`)
+  - **Latar Belakang / Masalah**: Apa yang mendasari tugas ini (merujuk PRD / kebutuhan pengguna)?
+  - **Rencana Solusi**: Komponen apa saja yang diubah atau ditambahkan.
+  - **Kriteria Penerimaan (*Acceptance Criteria*)**: Checklist kondisi sukses.
+* Dapatkan konfirmasi pengguna atau buatkan Issue tersebut di GitHub sebelum lanjut ke Langkah 2.
+
+### Langkah 2: Buat Branch Baru untuk Pengerjaan
+* **DILARANG** melakukan commit langsung ke branch `main`.
+* Buat branch baru dari `main` dengan format penamaan standar:
+  - `feat/<nomor-issue>-<deskripsi-singkat>` (untuk fitur baru)
+  - `fix/<nomor-issue>-<deskripsi-singkat>` (untuk perbaikan bug)
+  - `style/<nomor-issue>-<deskripsi-singkat>` (untuk UI/tampilan)
+  - `refactor/<nomor-issue>-<deskripsi-singkat>` (untuk pembersihan/restrukturisasi)
+  - `docs/<nomor-issue>-<deskripsi-singkat>` (untuk dokumentasi)
+  *(Contoh: `git checkout -b style/14-clean-prd-labels`)*.
+
+### Langkah 3: Koding & Pengujian Mandiri
+* Lakukan perubahan kode hanya pada branch tersebut.
+* Setiap commit wajib menyertakan referensi Issue (contoh: `style(ui): bersihkan label PRD (refs #14)`).
+* Wajib validasi sebelum membuat PR:
+  - `go test ./...`
+  - `npm --prefix frontend run build`
+
+### Langkah 4: Buka Pull Request (PR)
+* Push branch ke remote: `git push origin <nama-branch>`.
+* Buat Pull Request ke branch `main`.
+* Isi deskripsi PR dengan kata kunci penutup Issue: `Closes #<nomor-issue>`.
+
+### Langkah 5: Merge & Wajib Hapus Branch
+* Setelah Pull Request di-merge ke branch `main`:
+  1. Pindah kembali ke branch `main` dan tarik pembaruan:
+     ```powershell
+     git checkout main
+     git pull origin main
+     ```
+  2. **Hapus branch kerja lokal**:
+     ```powershell
+     git branch -d <nama-branch>
+     ```
+  3. **Hapus branch kerja di remote (GitHub)**:
+     ```powershell
+     git push origin --delete <nama-branch>
+     ```
+* Repositori lokal dan remote harus selalu bersih dari branch yang sudah selesai di-merge.
 
 ---
 

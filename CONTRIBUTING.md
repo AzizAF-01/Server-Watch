@@ -1,60 +1,73 @@
 # Panduan Kontribusi ServerWatch
 
-Terima kasih atas ketertarikan Anda untuk berkontribusi pada ServerWatch! Untuk menjaga konsistensi arsitektur, stabilitas, dan keamanan sistem, kami menerapkan alur kerja terstruktur.
+Terima kasih atas ketertarikan Anda untuk berkontribusi pada ServerWatch! Untuk menjaga konsistensi arsitektur, stabilitas, dan keamanan sistem, seluruh kontribusi wajib mengikuti alur kerja terstruktur.
 
 ---
 
-## 🚨 Aturan Utama: Wajib Membuat Issue Sebelum Request Fitur
+## 🚨 Siklus Hidup Standar Kontribusi (Issue ➔ Branch ➔ PR ➔ Merge ➔ Hapus Branch)
 
-> **PENTING**: Semua usulan fitur baru **WAJIB diawali dengan membuat Issue (Feature Request)** terlebih dahulu sebelum kode mulai ditulis atau Pull Request dibuka.
-
-### Mengapa Aturan Ini Wajib?
-1. **Penyelarasan Arsitektur**: Memastikan fitur baru tidak melanggar batasan arsitektur (seperti model *agentless*, keamanan kredensial di OS Keychain, dan batas memori SQLite).
-2. **Diskusi Terbuka**: Memberi ruang bagi maintainer dan kontributor untuk mendiskusikan pendekatan teknis, desain antarmuka, dan prioritas sebelum ada waktu koding yang terbuang sia-sia.
-3. **Pelacakan (*Traceability*)**: Memastikan setiap rilis memiliki riwayat perubahan (*changelog*) yang terhubung langsung ke kebutuhan pengguna.
-
----
-
-## Alur Kerja Penambahan Fitur Baru
+Setiap pengerjaan tugas — **baik penambahan fitur baru, perbaikan bug, pembersihan UI, maupun refactoring** — WAJIB mengikuti 5 langkah berikut:
 
 ```text
-[1. Buat Issue Feature Request]
-              ↓
-[2. Diskusi & Persetujuan Desain]
-              ↓
-[3. Buat Branch Baru: feat/issue-nomor-deskripsi]
-              ↓
-[4. Koding & Pengujian Mandiri (Unit Test & Build)]
-              ↓
-[5. Buka Pull Request (Hubungkan: Closes #XX)]
-              ↓
-[6. Review & Merge]
+[1. Buat GitHub Issue] 
+          ↓
+[2. Buat Branch Baru: <type>/<issue-number>-<slug>] 
+          ↓
+[3. Koding & Pengujian Mandiri] 
+          ↓
+[4. Buka Pull Request (Closes #XX)] 
+          ↓
+[5. Merge & Wajib Hapus Branch (Lokal & Remote)]
 ```
 
-1. **Buka Issue Baru**:
-   * Buka tab **Issues** di repositori GitHub ini.
-   * Pilih template **Permintaan Fitur (Feature Request)**.
-   * Isi latar belakang, solusi yang diusulkan, dan kriteria penerimaan (*acceptance criteria*).
-2. **Tunggu Konfirmasi / Diskusi**:
-   * Tim atau maintainer akan meninjau dan memberi label persetujuan.
-3. **Buat Branch**:
-   * Buat branch baru dari `main` dengan format:
+### 1. Buka Issue Terlebih Dahulu
+* **Wajib**: Dilarang membuat branch atau menulis kode sebelum Issue dibuat dan didiskusikan.
+* Buka tab **Issues** di repositori GitHub ini, lalu pilih template yang sesuai:
+  - **Permintaan Fitur (Feature Request)**
+  - **Laporan Bug / Perbaikan (Bug Report / Chore)**
+* Isi latar belakang, solusi yang diusulkan, dan kriteria penerimaan (*acceptance criteria*).
+
+### 2. Buat Branch Baru
+* Dilarang melakukan commit langsung ke branch `main`.
+* Buat branch baru dari `main` dengan format penamaan standar:
+  - `feat/<nomor-issue>-<deskripsi-singkat>` (fitur baru)
+  - `fix/<nomor-issue>-<deskripsi-singkat>` (perbaikan bug)
+  - `style/<nomor-issue>-<deskripsi-singkat>` (tampilan / UI)
+  - `refactor/<nomor-issue>-<deskripsi-singkat>` (pembersihan / restrukturisasi kode)
+  - `docs/<nomor-issue>-<deskripsi-singkat>` (dokumentasi)
+  ```bash
+  git checkout -b feat/12-grafik-disk-io
+  ```
+
+### 3. Koding & Pengujian Mandiri
+* Lakukan perubahan kode di branch tersebut.
+* Pastikan semua unit test backend lulus:
+  ```powershell
+  go test ./...
+  ```
+* Pastikan build frontend tidak ada error:
+  ```powershell
+  npm --prefix frontend run build
+  ```
+
+### 4. Buka Pull Request (PR)
+* Push branch ke remote: `git push origin <nama-branch>`.
+* Buka PR ke branch `main`.
+* Pada deskripsi PR, cantumkan kata kunci penutup issue, misalnya:
+  `Closes #12` atau `Fixes #12`.
+
+### 5. Merge & Hapus Branch
+* Setelah Pull Request disetujui dan di-merge ke branch `main`:
+  1. Kembali ke branch `main` dan tarik versi terbaru:
      ```bash
-     git checkout -b feat/<nomor-issue>-<deskripsi-singkat>
-     # Contoh: git checkout -b feat/12-grafik-disk-io
+     git checkout main
+     git pull origin main
      ```
-4. **Validasi & Pengujian Lokal**:
-   * Pastikan semua unit test backend lulus:
-     ```powershell
-     go test ./...
+  2. Hapus branch lokal:
+     ```bash
+     git branch -d <nama-branch>
      ```
-   * Pastikan build frontend tidak ada error:
-     ```powershell
-     cd frontend
-     npm run build
-     cd ..
+  3. Hapus branch remote:
+     ```bash
+     git push origin --delete <nama-branch>
      ```
-5. **Buat Pull Request (PR)**:
-   * Buat PR ke branch `main`.
-   * Pada deskripsi PR, cantumkan kata kunci penutup issue, misalnya:
-     `Closes #12` atau `Fixes #12`.
