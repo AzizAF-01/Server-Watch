@@ -23,13 +23,28 @@
   import UptimeView from './UptimeView.svelte';
   import SettingsView from './SettingsView.svelte';
 
-  // Navigation
+  // Navigation & Theme State
   let currentNav: 'server' | 'detail' | 'devops' | 'uptime' | 'alert' | 'term' | 'log' | 'database' | 'settings' = 'server';
+  let uiTheme: 'dark' | 'light' = 'dark';
   let selectedServerId: string | null = null;
   let selectedServer: model.Server | null = null;
   let devopsServerId: string = '';
   let serverMetricsMap: Record<string, model.ServerMetrics> = {};
   let liveToast: { title: string; body: string; level: string; time: string } | null = null;
+
+  function applyTheme(nextTheme: 'dark' | 'light') {
+    uiTheme = nextTheme;
+    if (typeof document !== 'undefined') {
+      document.documentElement.setAttribute('data-theme', nextTheme);
+    }
+    try {
+      localStorage.setItem('serverwatch_theme', nextTheme);
+    } catch (_) {}
+  }
+
+  function toggleTheme() {
+    applyTheme(uiTheme === 'dark' ? 'light' : 'dark');
+  }
 
   // Server List
   let servers: model.Server[] = [];
@@ -215,6 +230,16 @@
   let selectedImportIndices: Record<number, boolean> = {};
 
   onMount(async () => {
+    try {
+      const savedTheme = localStorage.getItem('serverwatch_theme');
+      if (savedTheme === 'light' || savedTheme === 'dark') {
+        applyTheme(savedTheme);
+      } else {
+        applyTheme('dark');
+      }
+    } catch (_) {
+      applyTheme('dark');
+    }
     await loadServers();
     await loadAlerts();
 
@@ -1398,8 +1423,22 @@
 <svelte:window on:keydown={handleGlobalKeydown} />
 
 <div class="titlebar">
-  <b>ServerWatch</b> <span>v0.1.0</span> <span style="color:var(--dim)">• SSH Monitoring</span>
+  <span class="unit-code">SW // UNIT-01</span>
+  <b>ServerWatch</b>
+  <span class="num" style="color:var(--dim)">v0.1.0</span>
+  <span style="color:var(--line-strong)">|</span>
+  <span style="color:var(--dim); font-family:var(--mono); font-size:11px">SSH TELEMETRY CONSOLE</span>
   <span class="spacer"></span>
+  <button
+    type="button"
+    class="theme-switch-btn"
+    on:click={toggleTheme}
+    title="Ganti tema permukaan antara Anodized Dark dan Brushed Aluminum Light"
+    aria-label="Ganti tema tampilan"
+  >
+    <span class="led"></span>
+    {uiTheme === 'dark' ? 'THEME: ANODIZED DARK' : 'THEME: ALUMINUM LIGHT'}
+  </button>
 </div>
 
 <div class="app-layout">
@@ -1407,13 +1446,17 @@
   <aside class="side">
     <div class="brand">
       <span class="brand-mark">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
           <rect x="3" y="4" width="18" height="7" rx="1.5"/><rect x="3" y="13" width="18" height="7" rx="1.5"/><circle cx="7" cy="7.5" r="1"/><circle cx="7" cy="16.5" r="1"/>
         </svg>
       </span>
-      ServerWatch
+      <div>
+        <div style="line-height:1.1">SERVERWATCH</div>
+        <div class="num" style="font-size:10px; font-weight:500; color:var(--dim); letter-spacing:0.06em; margin-top:2px">FLEET MONITOR</div>
+      </div>
     </div>
 
+    <div class="side-sec" style="margin-top:4px">Modules</div>
     <nav class="nav">
       <button type="button" class="nav-item {currentNav === 'server' ? 'active' : ''}" on:click={() => navigateTo('server')}>
         <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="7" rx="1.5"/><rect x="3" y="13" width="18" height="7" rx="1.5"/><circle cx="7" cy="7.5" r="1"/><circle cx="7" cy="16.5" r="1"/></svg>
@@ -1423,7 +1466,7 @@
         <svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
         Database & Backup
         {#if activeBackupCount > 0}
-          <span class="count num" style="background:#0284c7; color:#fff" title="{activeBackupCount} backup sedang berjalan">⚡ {activeBackupCount}</span>
+          <span class="count active-job num" title="{activeBackupCount} backup sedang berjalan">RUN {activeBackupCount}</span>
         {:else if databaseConfigs.length > 0}
           <span class="count num">{databaseConfigs.length}</span>
         {/if}
@@ -1454,7 +1497,7 @@
     </nav>
 
     {#if allTags.length > 0}
-      <div class="side-sec">Tag</div>
+      <div class="side-sec">Fleet Tags</div>
       <nav class="nav tagnav">
         {#each allTags as tag}
           <button type="button" class="nav-item {activeTag === tag ? 'active' : ''}" on:click={() => activeTag = activeTag === tag ? null : tag}>
@@ -1465,16 +1508,16 @@
     {/if}
 
     {#if activeBackupCount > 0}
-      <div style="margin: 10px 8px 6px 8px; padding: 8px 10px; background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 6px;">
+      <div class="side-backup-box">
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 4px;">
-          <span style="font-size: 11px; font-weight: 600; color: #38bdf8; display:flex; align-items:center; gap:5px">
-            <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#38bdf8; box-shadow:0 0 5px #38bdf8;"></span>
-            Backup ({activeBackupCount})
+          <span style="font-size: 11px; font-weight: 700; color: var(--accent); display:flex; align-items:center; gap:6px; font-family:var(--mono)">
+            <span class="st ok"></span>
+            BACKUP ({activeBackupCount})
           </span>
-          <button class="btn ghost" style="padding: 1px 6px; font-size: 10px; height: auto;" on:click={() => showActiveBackupsModal = true}>Buka</button>
+          <button class="btn ghost" style="padding: 1px 6px; font-size: 10.5px; height: 22px;" on:click={() => showActiveBackupsModal = true}>Buka</button>
         </div>
         {#each activeBackupList.slice(0, 2) as job}
-          <div style="font-size: 10.5px; color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px;">
+          <div class="num" style="font-size: 10.5px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px;">
             {job.databaseName}: {job.progressPercent}%
           </div>
         {/each}
@@ -1730,14 +1773,14 @@
 
             <!-- Memory Card -->
             <div class="panel" style="padding:16px">
-              <div class="panel-h" style="padding:0 0 10px 0">
+              <div class="panel-h" style="padding:0 0 10px 0; background:transparent">
                 <h2>RAM Memory</h2>
                 <span class="spacer"></span>
                 <span class="num" style="font-size:18px; font-weight:600">{metrics?.memory?.usedPercent || 0}%</span>
               </div>
               <div style="margin-top:12px">
                 <div class="bar" style="width:100%; height:8px">
-                  <i style="width:{metrics?.memory?.usedPercent || 0}%; background:#8fb8c9"></i>
+                  <i style="width:{metrics?.memory?.usedPercent || 0}%; background:var(--secondary-bar)"></i>
                 </div>
                 <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:12px; color:var(--dim)">
                   <span>Terpakai: <b class="num">{metrics?.memory?.usedBytes ? (metrics.memory.usedBytes / 1073741824).toFixed(1) + ' GB' : '-'}</b></span>
@@ -1865,8 +1908,8 @@
             Riwayat Log & Restore ({backupLogs.length})
           </button>
           {#if activeBackupCount > 0}
-            <button class="btn" style="margin-left:auto; background:rgba(56, 189, 248, 0.15); border:1px solid #38bdf8; color:#38bdf8; font-size:12px; display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:6px; font-weight:600;" on:click={() => showActiveBackupsModal = true}>
-              <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#38bdf8; box-shadow:0 0 6px #38bdf8;"></span>
+            <button class="btn" style="margin-left:auto; background:var(--accent-soft); border:1px solid var(--accent-border); color:var(--accent); font-size:12px; display:inline-flex; align-items:center; gap:6px; padding:4px 10px; font-weight:600;" on:click={() => showActiveBackupsModal = true}>
+              <span class="st ok"></span>
               <span>{activeBackupCount} Backup Berjalan</span>
             </button>
           {/if}
@@ -1887,7 +1930,7 @@
                   on:click={isDetectingDB ? handleCancelAutoDetect : handleAutoDetect}
                 >
                   <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                  {isDetectingDB ? 'Memindai... (Klik untuk Batal)' : '🔍 Pindai & Deteksi Otomatis'}
+                  {isDetectingDB ? 'Memindai... (Klik untuk Batal)' : 'Pindai & Deteksi Otomatis'}
                 </button>
                 <button class="btn primary" on:click={openAddDBModal}>+ Tambah Database Manual</button>
               </div>
@@ -1962,8 +2005,8 @@
 
                   <!-- Down Warning Banner if Down -->
                   {#if m && m.status === 'down'}
-                    <div style="font-size:11.5px; color:var(--warn); background:rgba(224,164,58,0.1); border:1px solid rgba(224,164,58,0.25); border-radius:4px; padding:6px 10px; margin-top:8px; display:flex; align-items:center; justify-content:space-between; gap:8px">
-                      <span>⚠️ Koneksi ditolak / belum terhubung. Periksa kredensial.</span>
+                    <div style="font-size:11.5px; color:var(--warn); background:var(--warn-soft); border:1px solid var(--warn-border); border-radius:var(--radius-sm); padding:6px 10px; margin-top:8px; display:flex; align-items:center; justify-content:space-between; gap:8px">
+                      <span>Koneksi ditolak / belum terhubung. Periksa kredensial.</span>
                       <button class="btn" style="padding:4px 10px; font-size:11.5px; height:28px; white-space:nowrap" on:click={() => openEditDBModal(db)}>Edit Kredensial</button>
                     </div>
                   {/if}
@@ -2172,7 +2215,7 @@
                       <td class="num">{sc.retentionDays} hari</td>
                       <td>
                         <span class="tag" style="color:var(--accent)">
-                          {sc.storageTarget === 's3' ? '☁️ Cloud S3 / R2' : sc.storageTarget === 'local' ? 'Laptop Lokal' : 'Server Remote'}
+                          {sc.storageTarget === 's3' ? 'Cloud S3 / R2' : sc.storageTarget === 'local' ? 'Laptop Lokal' : 'Server Remote'}
                         </span>
                       </td>
                       <td class="num" style="color:var(--dim); font-size:12px">
@@ -2251,7 +2294,7 @@
                               disabled={isVerifyingBackup[log.id]}
                               title="Cek keutuhan gzip & checksum SHA-256 di server"
                             >
-                              {isVerifyingBackup[log.id] ? 'Mengecek...' : '✓ Cek'}
+                              {isVerifyingBackup[log.id] ? 'Mengecek...' : 'Verifikasi'}
                             </button>
                             <button
                               class="btn ghost"
@@ -2260,7 +2303,7 @@
                               disabled={isDownloadingBackup[log.id]}
                               title="Unduh salinan arsip backup ke laptop Windows ini"
                             >
-                              {isDownloadingBackup[log.id] ? 'Mengunduh...' : '⬇ Unduh'}
+                              {isDownloadingBackup[log.id] ? 'Mengunduh...' : 'Unduh'}
                             </button>
                             <button
                               class="btn ghost"
@@ -2269,7 +2312,7 @@
                               disabled={isUploadingS3[log.id]}
                               title="Unggah arsip backup ini ke bucket S3 / Cloudflare R2 / MinIO"
                             >
-                              {isUploadingS3[log.id] ? 'Upload...' : '☁️ S3'}
+                              {isUploadingS3[log.id] ? 'Upload...' : 'Upload S3'}
                             </button>
                             <button
                               class="btn primary"
@@ -2277,7 +2320,7 @@
                               on:click={() => openRestoreWizard(log)}
                               title="Buka Wizard Restore / Rollback Database dari arsip ini"
                             >
-                              ⏪ Restore
+                              Restore
                             </button>
                           </div>
                         {:else}
@@ -2496,8 +2539,8 @@
 
         {#if termTab === 'pty'}
           <!-- Interactive PTY Terminal (xterm.js + Go SSH PTY) -->
-          <div class="panel" style="padding:0; overflow:hidden; display:flex; flex-direction:column; height:calc(100vh - 200px); min-height:480px; border:1px solid var(--line); border-radius:6px">
-            <div class="terminal-header" style="background:#14171b; padding:8px 14px; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:10px">
+          <div class="panel" style="padding:0; overflow:hidden; display:flex; flex-direction:column; height:calc(100vh - 200px); min-height:480px; border:1px solid var(--line-strong); border-radius:var(--radius-md)">
+            <div class="terminal-header" style="background:var(--term-header); padding:8px 14px; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:10px">
               <span style="font-size:12px; font-weight:600; color:var(--text); display:flex; align-items:center; gap:6px">
                 <span class="st {ptyStatus === 'connected' ? 'ok' : ptyStatus === 'connecting' ? 'warn' : 'off'}"></span>
                 PTY SSH Session {ptyStatus === 'connected' ? '(Aktif)' : ptyStatus === 'connecting' ? '(Menghubungkan...)' : '(Terputus)'}
@@ -2535,11 +2578,11 @@
             </div>
 
             <!-- Terminal Viewport -->
-            <div style="flex:1; position:relative; background:#0d1117; overflow:hidden">
+            <div style="flex:1; position:relative; background:var(--term-bg); overflow:hidden">
               {#if ptyStatus === 'disconnected'}
-                <div style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--dim); text-align:center; padding:24px">
+                <div style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#9ba3b0; text-align:center; padding:24px">
                   <svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:0.5; margin-bottom:12px"><rect x="3" y="4" width="18" height="16" rx="2"/><polyline points="7 10 10 13 7 16"/><line x1="12" y1="16" x2="17" y2="16"/></svg>
-                  <div style="font-weight:600; color:var(--text); font-size:14px; margin-bottom:4px">Terminal Interaktif PTY Belum Terhubung</div>
+                  <div style="font-weight:600; color:var(--term-text); font-size:14px; margin-bottom:4px">Terminal Interaktif PTY Belum Terhubung</div>
                   <div style="font-size:12px; max-width:460px; margin-bottom:16px; line-height:1.5">
                     Mendukung navigasi penuh bash/zsh, interactive CLI seperti htop, nano, vim, tmux, dan streaming dua arah real-time via RFC 4254 PTY channel.
                   </div>
@@ -2692,7 +2735,7 @@
 
               <div style="display:grid; grid-template-columns:1fr; gap:12px">
                 {#each broadcastResults as res}
-                  <div class="panel" style="padding:12px 14px; background:#161b22; border:1px solid {res.error ? 'rgba(239,68,68,0.35)' : 'var(--line)'}">
+                  <div class="panel" style="padding:12px 14px; background:var(--panel-2); border:1px solid {res.error ? 'var(--crit-border)' : 'var(--line)'}">
                     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px">
                       <div style="display:flex; align-items:center; gap:8px">
                         <span class="st {res.error ? 'crit' : 'ok'}"></span>
@@ -2720,7 +2763,7 @@
                       </div>
                     {/if}
 
-                    <pre style="margin:0; background:#0d1117; color:#e6edf3; padding:10px 12px; border-radius:5px; font-family:var(--mono); font-size:12px; max-height:220px; overflow-y:auto; white-space:pre-wrap; border:1px solid rgba(255,255,255,0.06)">{res.output || '(Tidak ada output yang dihasilkan)'}</pre>
+                    <pre style="margin:0; background:var(--term-bg); color:var(--term-text); padding:10px 12px; border-radius:var(--radius-sm); font-family:var(--mono); font-size:12px; max-height:220px; overflow-y:auto; white-space:pre-wrap; border:1px solid var(--line)">{res.output || '(Tidak ada output yang dihasilkan)'}</pre>
                   </div>
                 {/each}
               </div>
@@ -2824,7 +2867,7 @@
       </div>
 
     {:else if currentNav === 'settings'}
-      <SettingsView />
+      <SettingsView {uiTheme} onSelectTheme={applyTheme} />
     {/if}
   </main>
 </div>
@@ -2940,7 +2983,7 @@
               </div>
             </div>
           {:else}
-            <div style="padding:10px 14px; background:rgba(229,83,75,0.1); border:1px solid var(--crit); border-radius:6px; color:#f08a84; font-size:12px">
+            <div style="padding:10px 14px; background:var(--crit-soft); border:1px solid var(--crit); border-radius:var(--radius-sm); color:var(--crit); font-size:12px">
               Gagal terhubung: {testResult.error}
             </div>
           {/if}
@@ -3070,7 +3113,7 @@
           {#if isTestingDB}
             <i>●</i> Mengecek...
           {:else}
-            ⚡ Tes Koneksi
+            Tes Koneksi
           {/if}
         </button>
         <span class="spacer"></span>
@@ -3206,8 +3249,8 @@
                   Host: {item.host}:{item.port} • User default: {item.defaultUser || 'none'} {item.version ? '• ' + item.version : ''}
                 </div>
                 {#if item.serviceState === 'stopped'}
-                  <div style="font-size:11.5px; color:#ecc070; background:rgba(224,164,58,0.08); padding:6px 10px; border-radius:4px; margin-bottom:8px">
-                    ⚠️ Paket terinstal di WSL, tetapi service belum dijalankan. Jalankan perintah di WSL: <b style="font-family:var(--mono)">sudo service {item.type} start</b>
+                  <div style="font-size:11.5px; color:var(--warn); background:var(--warn-soft); border:1px solid var(--warn-border); padding:6px 10px; border-radius:var(--radius-sm); margin-bottom:8px">
+                    Paket terinstal di WSL, tetapi service belum dijalankan. Jalankan perintah di WSL: <b style="font-family:var(--mono)">sudo service {item.type} start</b>
                   </div>
                 {/if}
                 {#if item.databases && item.databases.length > 0}
@@ -3324,9 +3367,9 @@
             </div>
             <input 
               type="text" 
-              placeholder="🔍 Cari database..." 
+              placeholder="Cari database..." 
               bind:value={schemaSearchQuery} 
-              style="width: 200px; padding: 5px 10px; font-size: 12px; border-radius: 4px; border: 1px solid var(--line); background: var(--bg); color: var(--text)"
+              style="width: 200px; padding: 5px 10px; font-size: 12px; border-radius: var(--radius-sm); border: 1px solid var(--line-strong); background: var(--bg); color: var(--text)"
             />
           </div>
 
@@ -3377,7 +3420,7 @@
                           {#if isBackingUp[`${currentDbForSchemas?.id}_${schema.name}`]}
                             <i>●</i> Dump...
                           {:else}
-                            ⚡ Backup
+                            Backup
                           {/if}
                         </button>
                         <button 
@@ -3409,7 +3452,7 @@
       <div class="m-f">
         {#if currentDbForSchemas && !selectedSchemaForTables}
           <button class="btn ghost" on:click={() => { if (currentDbForSchemas) handleViewSchemas(currentDbForSchemas); }} disabled={isLoadingSchemas} style="font-size:12px">
-            🔄 Muat Ulang
+            Muat Ulang
           </button>
         {/if}
         <span class="spacer"></span>
@@ -3496,7 +3539,7 @@
           on:click={handleExecuteRestore}
           disabled={isRestoringDB || (vRes && !vRes.valid)}
         >
-          {isRestoringDB ? 'Sedang Merestorasi...' : '⏪ Jalankan Restore Database'}
+          {isRestoringDB ? 'Sedang Merestorasi...' : 'Jalankan Restore Database'}
         </button>
       </div>
     </div>
@@ -3508,10 +3551,10 @@
   <div class="modal-overlay" role="presentation" on:click|self={() => showActiveBackupsModal = false}>
     <div class="modal-box" style="width: 640px; max-width: 95vw;">
       <div class="m-h">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <span style="font-size:18px;">⚡</span>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span class="st ok"></span>
           <div>
-            <h2 style="margin:0; font-size:16px;">Proses Backup Database Berjalan</h2>
+            <h2 style="margin:0; font-size:15px;">Proses Backup Database Berjalan</h2>
             <div style="font-size:11.5px; color:var(--dim)">Daftar proses backup yang sedang berjalan di latar belakang</div>
           </div>
         </div>
@@ -3532,50 +3575,50 @@
         {:else}
           <div style="display: flex; flex-direction: column; gap: 14px;">
             {#each activeBackupList as job (job.jobId)}
-              <div style="border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 14px; background: var(--bg);">
+              <div style="border: 1px solid var(--line); border-radius: var(--radius-md); padding: 14px; background: var(--bg);">
                 <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
                   <div style="display:flex; align-items:center; gap:8px;">
-                    <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#38bdf8; box-shadow:0 0 6px #38bdf8;"></span>
+                    <span class="st ok"></span>
                     <b style="font-size: 14px; color: var(--text)">{job.databaseName}</b>
-                    <span style="font-size: 11px; padding: 1px 7px; border-radius: var(--radius-sm); background: rgba(56,189,248,0.15); color: #38bdf8;">{job.serverName || 'Server'}</span>
+                    <span class="tag" style="color:var(--accent)">{job.serverName || 'Server'}</span>
                   </div>
-                  <div style="font-size: 12px; font-family: monospace; color: var(--accent); font-weight: 600;">
+                  <div class="num" style="font-size: 12px; color: var(--accent); font-weight: 700;">
                     {job.progressPercent}%
                   </div>
                 </div>
 
                 <!-- Stepper Progress Indicators -->
                 <div style="display: flex; gap: 4px; margin-bottom: 10px;">
-                  <span style="flex:1; text-align:center; font-size:10px; padding:3px 0; border-radius:var(--radius-sm); {job.progressPercent >= 10 ? 'background:#0284c7; color:#fff' : 'background:var(--panel-2); color:var(--dim)'}">
+                  <span style="flex:1; text-align:center; font-size:10px; padding:3px 0; border-radius:var(--radius-sm); font-family:var(--mono); {job.progressPercent >= 10 ? 'background:var(--accent); color:var(--accent-ink)' : 'background:var(--panel-2); color:var(--dim)'}">
                     1. Pre-flight
                   </span>
-                  <span style="flex:1; text-align:center; font-size:10px; padding:3px 0; border-radius:var(--radius-sm); {job.progressPercent >= 35 ? 'background:#0284c7; color:#fff' : 'background:var(--panel-2); color:var(--dim)'}">
+                  <span style="flex:1; text-align:center; font-size:10px; padding:3px 0; border-radius:var(--radius-sm); font-family:var(--mono); {job.progressPercent >= 35 ? 'background:var(--accent); color:var(--accent-ink)' : 'background:var(--panel-2); color:var(--dim)'}">
                     2. Dump DB
                   </span>
-                  <span style="flex:1; text-align:center; font-size:10px; padding:3px 0; border-radius:var(--radius-sm); {job.progressPercent >= 70 ? 'background:#0284c7; color:#fff' : 'background:var(--panel-2); color:var(--dim)'}">
+                  <span style="flex:1; text-align:center; font-size:10px; padding:3px 0; border-radius:var(--radius-sm); font-family:var(--mono); {job.progressPercent >= 70 ? 'background:var(--accent); color:var(--accent-ink)' : 'background:var(--panel-2); color:var(--dim)'}">
                     3. Verifikasi
                   </span>
-                  <span style="flex:1; text-align:center; font-size:10px; padding:3px 0; border-radius:var(--radius-sm); {job.progressPercent >= 85 ? 'background:#0284c7; color:#fff' : 'background:var(--panel-2); color:var(--dim)'}">
+                  <span style="flex:1; text-align:center; font-size:10px; padding:3px 0; border-radius:var(--radius-sm); font-family:var(--mono); {job.progressPercent >= 85 ? 'background:var(--accent); color:var(--accent-ink)' : 'background:var(--panel-2); color:var(--dim)'}">
                     4. Salin/Offsite
                   </span>
-                  <span style="flex:1; text-align:center; font-size:10px; padding:3px 0; border-radius:var(--radius-sm); {job.progressPercent >= 100 ? 'background:#10b981; color:#fff' : 'background:var(--panel-2); color:var(--dim)'}">
+                  <span style="flex:1; text-align:center; font-size:10px; padding:3px 0; border-radius:var(--radius-sm); font-family:var(--mono); {job.progressPercent >= 100 ? 'background:var(--ok); color:#fff' : 'background:var(--panel-2); color:var(--dim)'}">
                     5. Selesai
                   </span>
                 </div>
 
                 <!-- Progress Bar -->
-                <div style="height: 6px; border-radius: var(--radius-sm); background: var(--line); overflow: hidden; margin-bottom: 10px;">
-                  <div style="height: 100%; width: {job.progressPercent}%; background: #38bdf8; transition: width 0.3s ease;"></div>
+                <div class="bar" style="width: 100%; height: 7px; margin-bottom: 10px; margin-right: 0;">
+                  <i style="width: {job.progressPercent}%;"></i>
                 </div>
 
                 <!-- Details & Current Message -->
-                <div style="font-size: 12px; color: var(--text); background: var(--panel-2); padding: 8px 10px; border-radius: var(--radius-md); border: 1px solid var(--line); margin-bottom: 6px;">
+                <div style="font-size: 12px; color: var(--text); background: var(--panel-2); padding: 8px 10px; border-radius: var(--radius-sm); border: 1px solid var(--line); margin-bottom: 6px;">
                   {job.message || 'Memproses backup database...'}
                 </div>
 
                 <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--dim); margin-top: 4px;">
                   <span>Target: <b style="color:var(--text)">{job.storageTarget === 'local' ? 'Lokal (ServerWatch)' : job.storageTarget === 's3' ? 'AWS S3 Cloud' : 'Remote SSH'}</b></span>
-                  <span>Waktu Berjalan: <b style="color:var(--text)">{Math.round(job.elapsedSec || 0)} detik</b></span>
+                  <span>Waktu Berjalan: <b class="num" style="color:var(--text)">{Math.round(job.elapsedSec || 0)} detik</b></span>
                 </div>
               </div>
             {/each}
@@ -3585,7 +3628,7 @@
 
       <div class="m-f" style="display:flex; align-items:center; justify-content:space-between;">
         <span style="font-size: 11px; color: var(--dim)">
-          ℹ️ Proses backup terus berjalan di latar belakang meskipun modal ini ditutup.
+          Proses backup terus berjalan di latar belakang meskipun modal ini ditutup.
         </span>
         <button class="btn primary" on:click={() => showActiveBackupsModal = false}>Tutup</button>
       </div>

@@ -10,6 +10,9 @@
   } from '../wailsjs/go/main/App';
   import type { model } from '../wailsjs/go/models';
 
+  export let uiTheme: 'dark' | 'light' = 'dark';
+  export let onSelectTheme: (t: 'dark' | 'light') => void = () => {};
+
   let activeTab: 'notifications' | 's3' | 'reports' | 'desktop' = 'notifications';
   let isLoading = false;
   let isSaving = false;
@@ -545,9 +548,26 @@
 
   {:else if activeTab === 'desktop'}
     <div id="panel-desktop" role="tabpanel" aria-labelledby="tab-desktop" class="panel" style="padding:18px">
-      <div style="font-weight:600; font-size:14.5px; margin-bottom:14px">Perilaku Aplikasi Desktop Windows</div>
+      <div style="font-weight:700; font-size:14.5px; margin-bottom:14px">Tema Tampilan & Perilaku Aplikasi Desktop</div>
 
       <div style="display:grid; gap:14px">
+        <div style="display:flex; align-items:center; justify-content:space-between; padding-bottom:12px; border-bottom:1px solid var(--line)">
+          <div>
+            <div style="font-weight:600">Tema Permukaan Instrumen (Dual Theme)</div>
+            <div style="font-size:12px; color:var(--dim)">
+              Pilih permukaan Anodized Dark (grafit gelap) atau Brushed Aluminum Light (kertas teknis & aluminium terang) dengan aksen Signal Orange.
+            </div>
+          </div>
+          <div class="seg" role="group" aria-label="Pilih Tema Tampilan">
+            <button type="button" class={uiTheme === 'dark' ? 'on' : ''} on:click={() => onSelectTheme('dark')}>
+              Anodized Dark
+            </button>
+            <button type="button" class={uiTheme === 'light' ? 'on' : ''} on:click={() => onSelectTheme('light')}>
+              Aluminum Light
+            </button>
+          </div>
+        </div>
+
         <div style="display:flex; align-items:center; justify-content:space-between; padding-bottom:12px; border-bottom:1px solid var(--line)">
           <div>
             <div style="font-weight:500">Konfirmasi Sebelum Eksekusi Perintah Terminal SSH</div>

@@ -307,7 +307,7 @@
         </svg>
         Audit Keamanan & Update OS
         {#if snapshot && snapshot.security.securityUpdates > 0}
-          <span class="tag" style="background:var(--warn); color:#15171a; font-weight:600; padding:1px 6px">{snapshot.security.securityUpdates} patch</span>
+          <span class="tag" style="background:var(--warn-soft); color:var(--warn); border:1px solid var(--warn-border); font-weight:600; padding:1px 6px">{snapshot.security.securityUpdates} patch</span>
         {/if}
       </button>
     </div>
@@ -731,7 +731,7 @@
         {#if isLoadingModalLog}
           <div style="padding:30px; text-align:center; color:var(--muted)">Mengambil output log dari server via SSH...</div>
         {:else}
-          <pre style="background:#0f1114; color:var(--text); border:1px solid var(--line); border-radius:5px; padding:12px; font-family:var(--mono); font-size:11.5px; max-height:420px; overflow:auto; white-space:pre-wrap; word-break:break-word">{logModalContent}</pre>
+          <pre style="background:var(--term-bg); color:var(--term-text); border:1px solid var(--line); border-radius:var(--radius-sm); padding:12px; font-family:var(--mono); font-size:11.5px; max-height:420px; overflow:auto; white-space:pre-wrap; word-break:break-word">{logModalContent}</pre>
         {/if}
       </div>
       <div class="m-f">
