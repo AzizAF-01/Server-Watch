@@ -397,7 +397,7 @@
     </div>
 
   {:else if activeTab === 's3'}
-    <div id="panel-s3" role="tabpanel" aria-labelledby="tab-s3" class="panel" style="padding:18px; max-width:740px">
+    <div id="panel-s3" role="tabpanel" aria-labelledby="tab-s3" class="panel" style="padding:18px; max-width:820px">
       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px">
         <div>
           <div style="font-weight:600; font-size:14.5px; color:var(--text)">Integrasi Cloud Object Storage (AWS S3 / Cloudflare R2 / MinIO)</div>
@@ -482,11 +482,11 @@
         </div>
       </div>
 
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; padding-top:12px; border-top:1px solid var(--line)">
-        <span style="font-size:12px; color:var(--muted)">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:16px; margin-top:12px; padding-top:12px; border-top:1px solid var(--line); flex-wrap:wrap">
+        <span style="font-size:12px; color:var(--muted); flex:1; min-width:260px">
           Setelah disimpan, Anda dapat memilih tujuan <b>Cloud Object Storage (S3 / R2)</b> saat membuat jadwal backup atau mengunggah file dari tab Riwayat Log Backup.
         </span>
-        <div style="display:flex; gap:8px">
+        <div style="display:flex; gap:8px; flex-shrink:0; align-items:center">
           <button class="btn" on:click={handleTestS3} disabled={isTestingS3}>
             {isTestingS3 ? 'Mengecek Bucket...' : 'Tes Koneksi Bucket S3/R2'}
           </button>
