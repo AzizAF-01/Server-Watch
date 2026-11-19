@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <title>ServerWatch - Alert & Manajemen Insiden</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .grid { display: grid; grid-template-columns: 1fr 380px; gap: 16px; height: 100%; }
+    .rule { font-family: var(--mono); font-size: 12px; }
+    
+    .toggle {
+      width: 28px; height: 16px; border-radius: 8px; background: var(--panel-2);
+      border: 1px solid var(--line-strong); position: relative; display: inline-block; vertical-align: middle;
+    }
+    .toggle::after { content: ""; position: absolute; top: 2px; left: 2px; width: 10px; height: 10px; border-radius: 50%; background: var(--dim); }
+    .toggle.on { background: var(--accent); border-color: var(--accent); }
+    .toggle.on::after { left: 14px; background: #fff; }
+    
+    .ch { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+    .ch:last-child { border-bottom: 0; }
+    .ch .d { color: var(--dim); font-size: 11.5px; }
+    
+    .lvl { font-size: 10.5px; font-weight: 700; padding: 2px 6px; border-radius: 2px; font-family: var(--mono); text-transform: uppercase; }
+    .lvl.crit { background: var(--crit-soft); color: var(--crit); border: 1px solid var(--crit-border); }
+    .lvl.warn { background: var(--warn-soft); color: var(--warn); border: 1px solid var(--warn-border); }
+    .lvl.ok { background: var(--ok-soft); color: var(--ok); border: 1px solid var(--ok-border); }
+  </style>
+</head>
+<body>
+<div id="titlebar"></div>
+<div class="app">
+  <div id="side"></div>
+  <main class="main">
+    <div class="topbar">
+      <h1>Alert & Manajemen Insiden</h1>
+      <span class="sub">2 insiden aktif • 1 peringatan</span>
+      <span class="spacer"></span>
+      <div class="seg">
+        <button class="on">Insiden Aktif (3)</button>
+        <button>Aturan Ambang Batas (8)</button>
+        <button>Riwayat Resolved</button>
+      </div>
+      <button class="btn primary"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Buat Aturan Baru</button>
+    </div>
+
+    <div class="content">
+      <div class="grid">
+        <!-- Left: Incident Log -->
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Daftar Insiden Infrastruktur Terkini</h3>
+            <span class="dim num" style="font-size:11px">Auto-refresh live</span>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th style="width:90px">Level</th>
+                <th>Target & Kondisi Pelanggaran</th>
+                <th>Waktu Mulai</th>
+                <th style="width:130px">Status Notifikasi</th>
+                <th class="r" style="width:120px">Aksi Insiden</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="lvl crit">CRITICAL</span></td>
+                <td>
+                  <div style="font-weight:600">db-prod-01: Disk /var terpakai 94.2%</div>
+                  <div class="num" style="font-size:11px; color:var(--dim)">Ambang batas: &gt; 90.0% selama 2 siklus polling berturut-turut</div>
+                </td>
+                <td class="num" style="font-size:11px; color:var(--muted)">14:02 WIB (42m lalu)</td>
+                <td>
+                  <span class="tag" style="background:var(--ok-soft); color:var(--ok); border-color:var(--ok-border)">
+                    Telegram Terkirim
+                  </span>
+                </td>
+                <td class="r">
+                  <button class="btn" style="height:24px; padding:0 8px">Investigasi</button>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="lvl warn">WARNING</span></td>
+                <td>
+                  <div style="font-weight:600">web-prod-02: CPU Spiking 96.8%</div>
+                  <div class="num" style="font-size:11px; color:var(--dim)">Ambang batas: &gt; 85.0% selama &gt; 5 menit</div>
+                </td>
+                <td class="num" style="font-size:11px; color:var(--muted)">14:38 WIB (6m lalu)</td>
+                <td>
+                  <span class="tag" style="background:var(--ok-soft); color:var(--ok); border-color:var(--ok-border)">
+                    Discord Terkirim
+                  </span>
+                </td>
+                <td class="r">
+                  <button class="btn" style="height:24px; padding:0 8px">Investigasi</button>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="lvl crit">CRITICAL</span></td>
+                <td>
+                  <div style="font-weight:600">backup-archive-01: Host Unreachable</div>
+                  <div class="num" style="font-size:11px; color:var(--dim)">SSH Connection Timeout (Connection Refused port 22)</div>
+                </td>
+                <td class="num" style="font-size:11px; color:var(--muted)">14:00 WIB (44m lalu)</td>
+                <td>
+                  <span class="tag" style="background:var(--ok-soft); color:var(--ok); border-color:var(--ok-border)">
+                    Telegram Terkirim
+                  </span>
+                </td>
+                <td class="r">
+                  <button class="btn" style="height:24px; padding:0 8px">Investigasi</button>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="lvl ok">RESOLVED</span></td>
+                <td>
+                  <div style="font-weight:600">api-gateway-01: Memory Spiking Teratasi</div>
+                  <div class="num" style="font-size:11px; color:var(--dim)">Penggunaan RAM kembali ke 28% (dibawah 80%)</div>
+                </td>
+                <td class="num" style="font-size:11px; color:var(--muted)">11:20 WIB</td>
+                <td>
+                  <span class="tag">Recovery Sent</span>
+                </td>
+                <td class="r">
+                  <button class="btn ghost" style="height:24px; padding:0 8px">Log</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="padding:9px 14px; border-top:1px solid var(--line); color:var(--dim); font-size:11.5px">
+            Menampilkan 4 catatan insiden terbaru • Sistem otomatis mengirim pesan pemulihan (*Recovery*) saat normal
+          </div>
+        </div>
+
+        <!-- Right: Channels & Policy -->
+        <div style="display:flex; flex-direction:column; gap:14px">
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Kanal Pengiriman Notifikasi</h3>
+            </div>
+            <div>
+              <div class="ch">
+                <span class="toggle on"></span>
+                <div style="flex:1">
+                  <div style="font-weight:600">Telegram Bot Alert</div>
+                  <div class="d">@ServerWatchAlertBot (Chat ID: -100481928)</div>
+                </div>
+                <button class="btn ghost" style="height:24px; padding:0 8px">Test</button>
+              </div>
+              <div class="ch">
+                <span class="toggle on"></span>
+                <div style="flex:1">
+                  <div style="font-weight:600">Discord Webhook</div>
+                  <div class="d">#infra-alerts (Channel DevOps)</div>
+                </div>
+                <button class="btn ghost" style="height:24px; padding:0 8px">Test</button>
+              </div>
+              <div class="ch">
+                <span class="toggle"></span>
+                <div style="flex:1">
+                  <div style="font-weight:600">Slack Webhook</div>
+                  <div class="d">#noc-critical (Nonaktif)</div>
+                </div>
+                <button class="btn ghost" style="height:24px; padding:0 8px">Set</button>
+              </div>
+              <div class="ch">
+                <span class="toggle on"></span>
+                <div style="flex:1">
+                  <div style="font-weight:600">Desktop Notification Banner</div>
+                  <div class="d">Native Windows Toast Notification</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Aturan Threshold Bawaan</h3>
+            </div>
+            <table>
+              <thead>
+                <tr><th>Metrik</th><th>Threshold</th><th class="r">Level</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>CPU Sustained</td><td class="rule num">&gt; 90% (5m)</td><td class="r"><span class="lvl crit">CRIT</span></td></tr>
+                <tr><td>RAM Usage</td><td class="rule num">&gt; 85% (3m)</td><td class="r"><span class="lvl warn">WARN</span></td></tr>
+                <tr><td>Disk Partition /</td><td class="rule num">&gt; 90%</td><td class="r"><span class="lvl crit">CRIT</span></td></tr>
+                <tr><td>SSL Expiry</td><td class="rule num">&lt; 14 Hari</td><td class="r"><span class="lvl warn">WARN</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="layout.js"></script>
+<script>renderShell("alert");</script>
+</body>
+</html>

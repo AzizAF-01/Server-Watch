@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <title>ServerWatch - Tambah Server Baru</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .bgframe { position: fixed; inset: 0; width: 1440px; height: 900px; border: 0; }
+    .scrim { position: fixed; inset: 0; background: var(--modal-backdrop); backdrop-filter: blur(2px); }
+    .modal {
+      position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);
+      width: 620px; background: var(--panel); border: 1px solid var(--line-strong); border-radius: var(--radius-md);
+      box-shadow: 0 20px 60px rgba(0,0,0,.5);
+    }
+    .m-h { display: flex; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--line); background: var(--panel-header); }
+    .m-h h2 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+    .m-b { padding: 18px 20px; display: grid; gap: 14px; }
+    .row2 { display: grid; grid-template-columns: 1fr 110px; gap: 12px; }
+    .row3 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    label { display: block; font-size: 11.5px; font-weight: 600; color: var(--muted); margin-bottom: 5px; }
+    .in {
+      height: 32px; border: 1px solid var(--line-strong); background: var(--panel-2); border-radius: var(--radius-sm);
+      display: flex; align-items: center; padding: 0 10px; gap: 8px; font-size: 12.5px; color: var(--text);
+    }
+    .in.focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+    .in .end { margin-left: auto; color: var(--dim); font-size: 11px; }
+    .note { font-size: 11px; color: var(--dim); margin-top: 4px; }
+    
+    .hk { border: 1px solid var(--warn-border); background: var(--warn-soft); border-radius: var(--radius-sm); padding: 10px 12px; }
+    .hk h4 { font-size: 12px; font-weight: 700; color: var(--warn); margin-bottom: 3px; }
+    .hk .fp { font-family: var(--mono); font-size: 11px; background: var(--bg); border: 1px solid var(--line); border-radius: 2px; padding: 5px 8px; margin: 6px 0; color: var(--text); }
+    
+    .m-f { display: flex; align-items: center; gap: 10px; padding: 12px 20px; border-top: 1px solid var(--line); background: var(--panel-header); }
+  </style>
+</head>
+<body>
+<iframe class="bgframe" id="bgframe" src="01-dashboard.html"></iframe>
+<div class="scrim"></div>
+<div class="modal">
+  <div class="m-h">
+    <h2>Registrasi Node SSH Baru</h2>
+    <span style="flex:1"></span>
+    <button class="btn ghost"><svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" fill="none" stroke-width="2"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Import ~/.ssh/config</button>
+    <span class="muted" style="margin-left:12px; cursor:pointer">&#x2715;</span>
+  </div>
+  
+  <div class="m-b">
+    <div class="row2">
+      <div>
+        <label>Nama Server (Display Label)</label>
+        <div class="in focus"><b>db-slave-02</b></div>
+      </div>
+      <div>
+        <label>Tag / Kelompok</label>
+        <div class="in"><span>staging</span></div>
+      </div>
+    </div>
+    
+    <div class="row2">
+      <div>
+        <label>Hostname / IP Address Target</label>
+        <div class="in"><span>10.0.1.22</span></div>
+      </div>
+      <div>
+        <label>Port SSH</label>
+        <div class="in num"><span>22</span></div>
+      </div>
+    </div>
+    
+    <div class="row3">
+      <div>
+        <label>Username SSH</label>
+        <div class="in"><span>deploy</span></div>
+      </div>
+      <div>
+        <label>Metode Autentikasi</label>
+        <div class="seg" style="width:100%">
+          <button class="on" style="flex:1">SSH Key</button>
+          <button style="flex:1">Password</button>
+        </div>
+      </div>
+    </div>
+    
+    <div>
+      <label>Private Key Path</label>
+      <div class="in">
+        <span class="num">C:\Users\Admin\.ssh\id_ed25519</span>
+        <span class="end"><button class="btn ghost" style="height:22px; padding:0 6px">Pilih File...</button></span>
+      </div>
+      <div class="note">Password atau Passphrase private key disimpan di Windows Credential Manager (SEC-02).</div>
+    </div>
+
+    <div>
+      <label>Bastion / Jump Host (Opsional)</label>
+      <div class="in">
+        <span>bastion-01 (bastion.corp.net:22)</span>
+        <span class="end" style="color:var(--ok)">✓ Terverifikasi</span>
+      </div>
+    </div>
+    
+    <div class="hk">
+      <h4>Verifikasi Host Key Fingerprint (SEC-01)</h4>
+      <div class="fp">SHA256:7uK39A/9m0Qz3b2Kx19NvfA940KlA+8vWb39aQ/10Lk (ED25519)</div>
+      <div class="note" style="color:var(--text)">Host key cocok dengan database Known Hosts. Koneksi aman dari serangan Man-In-The-Middle.</div>
+    </div>
+  </div>
+  
+  <div class="m-f">
+    <button class="btn"><svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" fill="none" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>Uji Koneksi SSH</button>
+    <span style="flex:1"></span>
+    <button class="btn ghost">Batal</button>
+    <button class="btn primary">Simpan Server</button>
+  </div>
+</div>
+
+<script>
+  const isLight = document.documentElement.getAttribute("data-theme") === "light";
+  const frame = document.getElementById("bgframe");
+  if (frame) {
+    frame.src = isLight ? "01-dashboard-light.html" : "01-dashboard-dark.html";
+  }
+</script>
+</body>
+</html>
