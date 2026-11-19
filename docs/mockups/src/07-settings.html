@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <title>ServerWatch - Pengaturan Sistem & Integrasi</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .grid { display: grid; grid-template-columns: 240px 1fr; gap: 20px; height: 100%; }
+    .set-nav { display: flex; flex-direction: column; gap: 4px; }
+    .set-nav button {
+      display: flex; align-items: center; gap: 10px; padding: 9px 14px;
+      border-radius: var(--radius-md); border: 1px solid transparent; background: transparent;
+      color: var(--muted); font: inherit; font-size: 12.5px; font-weight: 500; cursor: pointer; text-align: left;
+    }
+    .set-nav button.active {
+      background: var(--panel-2); color: var(--text); font-weight: 600;
+      border-color: var(--line-strong); box-shadow: 0 1px 0 var(--bevel-shadow);
+    }
+    .set-nav svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+    
+    .section-card {
+      background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius-md);
+      padding: 18px 20px; margin-bottom: 16px; box-shadow: var(--panel-shadow);
+    }
+    .section-card h2 { font-size: 14px; font-weight: 700; margin-bottom: 4px; color: var(--text); }
+    .section-card p { font-size: 12px; color: var(--muted); margin-bottom: 14px; }
+    
+    .field-row { display: grid; grid-template-columns: 200px 1fr; gap: 16px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
+    .field-row:last-child { border-bottom: 0; }
+    .field-lbl { font-size: 12px; font-weight: 600; color: var(--text); }
+    .field-sub { font-size: 11px; color: var(--dim); margin-top: 2px; }
+    
+    .in-text {
+      width: 100%; max-width: 420px; height: 32px; border: 1px solid var(--line-strong);
+      background: var(--panel-2); border-radius: var(--radius-sm); padding: 0 10px;
+      color: var(--text); font: inherit; font-size: 12px; font-family: var(--mono);
+    }
+    
+    .sec-badge {
+      display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-family: var(--mono);
+      padding: 3px 8px; border-radius: 2px; background: var(--ok-soft); color: var(--ok); border: 1px solid var(--ok-border);
+    }
+    
+    .toggle {
+      width: 28px; height: 16px; border-radius: 8px; background: var(--panel-2);
+      border: 1px solid var(--line-strong); position: relative; display: inline-block; vertical-align: middle;
+    }
+    .toggle::after { content: ""; position: absolute; top: 2px; left: 2px; width: 10px; height: 10px; border-radius: 50%; background: var(--dim); }
+    .toggle.on { background: var(--accent); border-color: var(--accent); }
+    .toggle.on::after { left: 14px; background: #fff; }
+  </style>
+</head>
+<body>
+<div id="titlebar"></div>
+<div class="app">
+  <div id="side"></div>
+  <main class="main">
+    <div class="topbar">
+      <h1>Pengaturan Sistem & Integrasi</h1>
+      <span class="sub">Konfigurasi notifikasi, retensi, ekspor laporan, dan keamanan desktop</span>
+      <span class="spacer"></span>
+      <button class="btn primary"><svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Simpan Perubahan</button>
+    </div>
+
+    <div class="content">
+      <div class="grid">
+        <!-- Settings Side Tabs -->
+        <div class="set-nav">
+          <button class="active">
+            <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            Notifikasi Multi-Channel
+          </button>
+          <button>
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Backup Offsite S3 Cloud
+          </button>
+          <button>
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            Laporan & Retensi Data
+          </button>
+          <button>
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+            Mode Background & Windows
+          </button>
+          <button>
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Keamanan Kredensial
+          </button>
+        </div>
+
+        <!-- Settings Content Pane -->
+        <div>
+          <!-- Notifikasi Telegram -->
+          <div class="section-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px">
+              <h2>Integrasi Bot Telegram (FR-25)</h2>
+              <span class="sec-badge">
+                <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" fill="none" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Windows Credential Manager (SEC-08)
+              </span>
+            </div>
+            <p>Kirimkan peringatan instan ketika server mengalami status Critical/Warning dan saat pulih (*recovery*).</p>
+
+            <div class="field-row">
+              <div>
+                <div class="field-lbl">Bot Token Telegram</div>
+                <div class="field-sub">Dihasilkan via @BotFather</div>
+              </div>
+              <div style="display:flex; gap:10px; align-items:center">
+                <input type="password" class="in-text" value="7182948192:AAH9fkl20J1901_jfkla9201" readonly>
+                <button class="btn">Ubah Token</button>
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div>
+                <div class="field-lbl">Target Chat / Channel ID</div>
+                <div class="field-sub">Grup DevOps atau Chat ID pribadi</div>
+              </div>
+              <div style="display:flex; gap:10px; align-items:center">
+                <input type="text" class="in-text" value="-100192847192">
+                <button class="btn primary">Kirim Uji Coba</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Webhook Discord / Slack -->
+          <div class="section-card">
+            <h2>Webhook Discord & Slack (FR-26)</h2>
+            <p>Kirimkan rich embed notification ke channel koordinasi incident response tim DevOps.</p>
+
+            <div class="field-row">
+              <div>
+                <div class="field-lbl">Discord Webhook URL</div>
+                <div class="field-sub">Channel #infra-alerts</div>
+              </div>
+              <div style="display:flex; gap:10px; align-items:center">
+                <input type="password" class="in-text" value="https://discord.com/api/webhooks/12984192/abcdef123" readonly>
+                <button class="btn">Uji Webhook</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ekspor Laporan & PDF -->
+          <div class="section-card">
+            <h2>Ekspor Laporan Eksekutif & Telemetri (FR-29, FR-31)</h2>
+            <p>Hasilkan dokumen audit kepatuhan infrastruktur siap cetak dalam format PDF atau CSV.</p>
+
+            <div class="field-row">
+              <div>
+                <div class="field-lbl">Laporan Eksekutif Bulanan</div>
+                <div class="field-sub">SLA Uptime, ringkasan insiden, status backup</div>
+              </div>
+              <div style="display:flex; gap:10px">
+                <button class="btn primary">
+                  <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  Generate PDF Eksekutif
+                </button>
+                <button class="btn">
+                  Ekspor CSV Raw Data
+                </button>
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div>
+                <div class="field-lbl">Retensi Log & Telemetri</div>
+                <div class="field-sub">Pembersihan otomatis database lokal SQLite</div>
+              </div>
+              <div style="display:flex; align-items:center; gap:10px">
+                <div class="seg">
+                  <button>7 Hari</button>
+                  <button class="on">30 Hari</button>
+                  <button>90 Hari</button>
+                  <button>1 Tahun</button>
+                </div>
+                <span class="num" style="font-size:11px; color:var(--dim)">Ukuran DB saat ini: 42.8 MB</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="layout.js"></script>
+<script>renderShell("gear");</script>
+</body>
+</html>
